@@ -20,6 +20,11 @@ function Tabs() {
                         DATASETS
                     </Link>
                     </li>
+                    <li>
+                    <Link to='/hwset'>
+                        HARDWARESETS
+                    </Link>
+                    </li>
                 </ul>
             </nav>
         </div>
