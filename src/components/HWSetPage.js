@@ -1,19 +1,21 @@
-import React from 'react';
+import {React,useState} from 'react';
 import { Link } from 'react-router-dom';
 
 {/*TODO Change*/}
 let HardwareArray = [
-  {id: 1,     name: "HardwareSet" ,capacity:300, availability:300,checkedOut:0},
-  {id: 2,     name: "HardwareSet2",capacity:300, availability:300,checkedOut:0}
+  {id: 1,     name: "HardwareSet" ,capacity:300, availability:300},
   ]
 
 function HWSetPage(){
+
+
+    const [database,setDatabase] = useState(HardwareArray)
+    const [checkOut,setCheckout] = useState(0)
       
     {/*TODO CHANGE IMPLEMENTATION NEED ANOTHER BUTTON TO ACTUALLY PROCCESS CHECKOUT*/ }
       function incrementValue(i){
-        HardwareArray[i].availability = HardwareArray[i].availability - 1
-        HardwareArray[i].checkedOut = HardwareArray[i].checkedOut + 1
-        console.log("Hardware " + i + ' Checked Out is ' + HardwareArray[i].checkedOut)
+        setCheckout(previousValue => previousValue + 1)
+        console.log("Hardware " + i + ' Checked Out is ' + checkOut)
         console.log("Hardware " + i + ' Availability is ' + HardwareArray[i].availability)
       }
   
@@ -27,8 +29,36 @@ function HWSetPage(){
 					        <h3>capacity is: {value.capacity}         </h3>
 				    	    <h3>availability is: {value.availability} </h3>
                 <button onClick = {() =>incrementValue(i)}>+</button>
-                <h3>Checkout, How many??: {value.checkedOut}</h3>
+                <h3>Checkout, How many??: {checkOut}</h3>
+                <button
+                variant="outlined"
+                onClick={() => {
+                    
+                    fetch("http://127.0.0.1:5000/checkOut/" + i + '/' + checkOut)
+                        .then(response => 
+                            response.json()
+                        )
+                        .then(data => {
+      
+                            console.log(data)
+                            setDatabase(data)
+                            
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+
+                        setCheckout(0)
+                      
+                    } 
+                  }
+                    
+            >
+                        Submit
+                    </button>
+                  ))
 			    	    </div>
+                
              ))}
       	    </div>
             )
