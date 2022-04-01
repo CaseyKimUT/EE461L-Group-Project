@@ -11,13 +11,11 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder="/build", static_url_path="")
 
-#change to get from database and use class
-db = {1:{"name":"HardwareSet","capacity":300,"availability":300}}
-
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
 hwSet1=hardwareSet.HWSet(250)
 
+##TODO implement with mongoDB
 db = {1:hwSet1}
 
 # comment out on deployment
@@ -25,14 +23,16 @@ CORS(app)
 
 
 
-@app.route("/checkOut/<Index>/<Amount>", methods=["GET"])
-def checkOut(index: str,amount: str):
-    if index in db:
-        output = db.get(index)
-        output.check_out(amount)
+@app.route("/checkOut/<hwSetIndex>/", methods=["GET"])
+def checkOut(hwSetIndex: str):
+
+    if hwSetIndex in db:
+        output = db.get(hwSetIndex)
     else:
-        output = "Index out of Bounds" #probably won't happen
-    return jsonify(db=output)
+        output = 0
+
+
+    return jsonify(hwSetIndex = output)
 
 @app.route("/")
 def index():

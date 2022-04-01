@@ -12,11 +12,10 @@ function HWSetPage(){
     const [database,setDatabase] = useState(HardwareArray)
     const [checkOut,setCheckout] = useState(0)
       
-    {/*TODO CHANGE IMPLEMENTATION NEED ANOTHER BUTTON TO ACTUALLY PROCCESS CHECKOUT*/ }
+
       function incrementValue(i){
         setCheckout(previousValue => previousValue + 1)
         console.log("Hardware " + i + ' Checked Out is ' + checkOut)
-        console.log("Hardware " + i + ' Availability is ' + HardwareArray[i].availability)
       }
   
       function displayHardware(){
@@ -30,19 +29,17 @@ function HWSetPage(){
 				    	    <h3>availability is: {value.availability} </h3>
                 <button onClick = {() =>incrementValue(i)}>+</button>
                 <h3>Checkout, How many??: {checkOut}</h3>
+                
                 <button
                 variant="outlined"
                 onClick={() => {
                     
-                    fetch("http://127.0.0.1:5000/checkOut/" + i + '/' + checkOut)
-                        .then(response => 
+                    fetch("http://127.0.0.1:5000/checkOut/" + i)
+                       .then(response => 
                             response.json()
                         )
                         .then(data => {
-      
                             console.log(data)
-                            setDatabase(data)
-                            
                         })
                         .catch(error => {
                             console.log(error)
