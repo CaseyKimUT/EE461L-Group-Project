@@ -1,24 +1,24 @@
-import {React,useState} from 'react';
-import { Link } from 'react-router-dom';
+import {React,useState,useEffect} from 'react';
+
 
 {/*TODO Change*/}
 let HardwareArray = [
-  {id: 1,     name: "HardwareSet" ,capacity:300, availability:300},
+  {id: 0,name:"HardwareSet",capacity:300,availability:300},
+  {id: 1,name:"HardwareSet",capacity:300,availability:300}
   ]
 
 function HWSetPage(){
 
-
-    const [database,setDatabase] = useState(HardwareArray)
+    {/*TODO have different checkout for every id*/}
     const [checkOut,setCheckout] = useState(0)
-      
-
-      function incrementValue(i){
-        setCheckout(previousValue => previousValue + 1)
-        console.log("Hardware " + i + ' Checked Out is ' + checkOut)
-      }
   
       function displayHardware(){
+           {/*TODO have different increment for every id*/}
+          function incrementValue(i){
+              setCheckout(previousValue => previousValue + 1)
+              console.log("Hardware " + i + ' Checked Out is ' + checkOut)
+          }
+
 	    return (
             <div>
 		        {HardwareArray.map((value,i) => (
@@ -33,12 +33,30 @@ function HWSetPage(){
                 <button
                 variant="outlined"
                 onClick={() => {
-                    
-                    fetch("http://127.0.0.1:5000/checkOut/" + i)
+
+                    {/*Probably can send another variable with this*/}
+                    let hardwareTemplate = {}     
+                  
+                    fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut + "/" + hardwareTemplate)
                        .then(response => 
                             response.json()
                         )
                         .then(data => {
+                            {/*Data stored in hardwareTemplate from flask*/}
+                            let updatedHardware = ({
+                              id: data.hardwareTemplate.id,
+                              name: data.hardwareTemplate.name,
+                              capacity: data.hardwareTemplate.capacity,
+                              availability: data.hardwareTemplate.availability,
+                            });
+                                                      
+                            HardwareArray[updatedHardware.id] = updatedHardware
+                            
+                            {/*forces rerender, probably better way to do this */}
+                            setCheckout(previousValue => previousValue - 1)
+                            setCheckout(previousValue => previousValue + 1)
+                            
+                            console.log(updatedHardware)
                             console.log(data)
                         })
                         .catch(error => {
