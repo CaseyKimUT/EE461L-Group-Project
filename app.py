@@ -1,6 +1,8 @@
+from genericpath import getsize
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
 from matplotlib.style import available
+from numpy import size
 
 import hardwareSet
 
@@ -12,6 +14,8 @@ from flask_cors import CORS
 
 app = Flask(__name__, static_folder="/build", static_url_path="")
 
+# comment out on deployment
+CORS(app)
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
 hwSet1=hardwareSet.HWSet(250)
@@ -21,10 +25,38 @@ hwSet2=hardwareSet.HWSet(250)
 db = {0:hwSet1,
       1:hwSet2}
 
-# comment out on deployment
-CORS(app)
+#TODO implement on frontend, maybe not needed idk
+def initializeHardwarePage(hardwareTemplate):
+    """initializes a document for all hardware sets in database
+       format ex
+       { 
+          0:{ 
+            id:0,
+            name:HardwareSet_0",
+            capacity:300,
+            availability:300
+          },
+          ...
+        }
+    """
+    print(hardwareTemplate)
 
+    output = {}
 
+    for x in range(len(db)):
+        
+        currentHardware = db[x]
+    
+        hardwareFormat = {
+            "id":int(x),
+            "name":"HardwareSet_"+str(x),
+            "capacity":currentHardware.get_capacity(),
+            "availability":currentHardware.get_availability()
+        }
+        output[x] = hardwareFormat
+        print(output)
+
+    return jsonify(output)
 
 @app.route("/checkOut/<hardwareId>/<checkoutAmount>/<hardwareTemplate>", methods=["GET"])
 def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
@@ -40,7 +72,7 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
     currentHardware.check_out(checkoutAmount)
     
     output = {"id":int(hardwareId),
-             "name":"HardwareSet",
+             "name":"HardwareSet_"+hardwareId,
              "capacity":currentHardware.get_capacity(),
              "availability":currentHardware.get_availability()
              }
