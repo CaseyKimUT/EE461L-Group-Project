@@ -8,8 +8,19 @@ import { Link } from 'react-router-dom';
 function SignUpPage() {
     return (
         <div>
-            Sign Up Page
-        </div>
+        <form>
+            <label>Username: 
+                <input type="text"></input>
+            </label>
+            <label>Password: 
+                <input type="text"></input>
+            </label>
+            <label>Confirm Password: 
+                <input type="text"></input>
+            </label>
+            <input type="submit" value="Create"></input>
+        </form>
+    </div>
     );
 }
 
