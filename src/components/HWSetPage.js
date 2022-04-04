@@ -3,8 +3,8 @@ import {React,useState,useEffect} from 'react';
 
 {/*TODO Change*/}
 let HardwareArray = [
-  {id: 0,name:"HardwareSet",capacity:300,availability:300},
-  {id: 1,name:"HardwareSet",capacity:300,availability:300}
+  {id: 0,name:"HardwareSet_0",capacity:300,availability:300},
+  {id: 1,name:"HardwareSet_1",capacity:300,availability:300}
   ]
 
 function HWSetPage(){
@@ -14,7 +14,6 @@ function HWSetPage(){
 
     function incrementValue(i){
       setCheckout(previousValue => previousValue + 1)
-      console.log("Hardware " + i + ' Checked Out is ' + checkOut)
     }
 
     function decrementValue(i){

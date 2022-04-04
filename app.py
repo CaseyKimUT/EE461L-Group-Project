@@ -82,7 +82,7 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
 
 @app.route("/")
 def index():
-    return send_from_directory("frontend/build", "index.html")
+    return send_from_directory("/build", "index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
