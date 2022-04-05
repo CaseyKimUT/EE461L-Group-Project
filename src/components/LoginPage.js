@@ -8,9 +8,17 @@ import { Link } from 'react-router-dom';
 function LoginPage() {
     return (
         <div>
-            LOGIN PAGE
+            <form>
+                <label>Username: 
+                    <input type="text"></input>
+                </label>
+                <label>Password: 
+                    <input type="text"></input>
+                </label>
+                <input type="submit" value="Login"></input>
+            </form>
         </div>
     );
 }
 
-export default LoginPage;
+export default LoginPage; 
