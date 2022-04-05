@@ -1,3 +1,4 @@
+import { render } from '@testing-library/react';
 import {React,useState,useEffect} from 'react';
 
 
@@ -9,16 +10,25 @@ let HardwareArray = [
 
 function HWSetPage(){
 
-    {/*TODO have different checkout for every id maybe*/}
-    const [checkOut,setCheckout] = useState(0)
-
+    const [checkOut,setCheckout] = useState([0,0])
+    const [rerender,setRerender] = useState(0)
+    
     function incrementValue(i){
-      setCheckout(previousValue => previousValue + 1)
+      let temp = checkOut
+      temp[i]++
+      setCheckout(checkOut => checkOut = temp)
+      setRerender(rerender => rerender + 1)
+      console.log("Hardware " + i + ' Checked Out is ' + checkOut)
     }
 
     function decrementValue(i){
-      if(checkOut > 0){
-        setCheckout(previousValue => previousValue - 1)
+      
+
+      if(checkOut[i] > 0){
+        let temp = checkOut
+        temp[i]--
+        setCheckout(checkOut => checkOut = temp)       
+        setRerender(rerender => rerender - 1)
       } 
       console.log("Hardware " + i + ' Checked Out is ' + checkOut)
     }
@@ -39,7 +49,7 @@ function HWSetPage(){
                   {" "} 
                   <button onClick = {() =>decrementValue(i)}>-</button>  
                   {" "} 
-                  {checkOut} 
+                  {checkOut[i]} 
                   {" "} 
                   <button onClick = {() =>incrementValue(i)}>+</button>                
                   {" "}
@@ -49,8 +59,10 @@ function HWSetPage(){
 
                       {/*Probably can send another variable with this*/}
                       let hardwareTemplate = {}     
+
+
                   
-                      fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut + "/" + hardwareTemplate)
+                      fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
                          .then(response => 
                               response.json()
                           )
@@ -66,16 +78,20 @@ function HWSetPage(){
                               HardwareArray[updatedHardware.id] = updatedHardware
                             
                               {/*forces rerender, probably better way to do this */}
-                              setCheckout(previousValue => previousValue - 1)
-                              setCheckout(previousValue => previousValue + 1)
+                              
+                              setRerender(render => render - 1)                             
+                              setRerender(render => render + 1)
                             
                               console.log(data)
                           })
                           .catch(error => {
                               console.log(error)
                           })
+                          let temp = checkOut
+                          temp[i] = 0
+                          setCheckout(checkOut => checkOut = temp)
 
-                          setCheckout(0)
+                          
                       
                        } 
                     }
