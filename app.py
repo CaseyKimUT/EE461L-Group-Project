@@ -8,14 +8,14 @@ import hardwareSet
 
 
 # comment out on deployment
-from flask_cors import CORS
+#from flask_cors import CORS
 
 
 
 app = Flask(__name__, static_folder="./build", static_url_path="")
 
 # comment out on deployment
-CORS(app)
+#CORS(app)
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
 hwSet1=hardwareSet.HWSet(250)
@@ -82,7 +82,7 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
 
 @app.route("/")
 def index():
-    return send_from_directory("/build", "index.html")
+    return send_from_directory("./build", "index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
