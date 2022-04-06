@@ -10,10 +10,28 @@ class DatasetItem extends React.Component {
 
     render() {
         return(
-            <Stack direction='row' alignItems="flex-start" justifyContent='flex-start' spacing={2}>
-                <Link to={this.props.dblink} target="_blank">
-                    {this.props.dbname}
-                </Link>
+            <Stack direction='column' alignItems="flex-start" justifyContent='flex-start' spacing={2}>
+                <Stack direction='row' alignItems="flex-start" justifyContent='flex-start' spacing={3}>
+                    <a target="_blank" href={this.props.dblink}>
+                        {this.props.dbname}
+                    </a>
+
+                    <a target="_blank" href={this.props.dllink}>
+                        DOWNLOAD
+                    </a>
+                </Stack>
+
+                <div>
+                    {"TEXT FOR META DATA"}
+                </div>
+                
+                <div>
+                    {"TEXT FOR META DATA"}
+                </div>
+                
+                <div>
+                    {"TEXT FOR META DATA"}
+                </div>
 
             </Stack>
         );
