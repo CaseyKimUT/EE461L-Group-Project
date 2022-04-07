@@ -25,6 +25,11 @@ function Tabs() {
                         HARDWARESETS
                     </Link>
                     </li>
+                    <li>
+                    <Link to='/signup'>
+                        SIGNUP
+                    </Link>
+                    </li>
                 </ul>
             </nav>
         </div>

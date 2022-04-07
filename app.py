@@ -69,15 +69,43 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
     print(hardwareTemplate)
 
     currentHardware = db[currentHardwareId]
+    userCheckedOut = currentHardware.get_availability()
     currentHardware.check_out(checkoutAmount)
+    userCheckedOut = userCheckedOut - currentHardware.get_availability() 
+    print(checkoutAmount)
     
     output = {"id":int(hardwareId),
              "name":"HardwareSet_"+hardwareId,
              "capacity":currentHardware.get_capacity(),
-             "availability":currentHardware.get_availability()
+             "availability":currentHardware.get_availability(),
+             "checkedOutAmount":userCheckedOut
              }
 
     #print(output)
+    return jsonify(hardwareTemplate = output)
+
+@app.route("/checkIn/<hardwareId>/<checkInAmount>/<hardwareTemplate>", methods=["GET"])
+def checkIn(hardwareId:int,checkInAmount:int,hardwareTemplate):
+
+    currentHardwareId = int(hardwareId)
+    checkInAmount = int(checkInAmount)
+
+    print(hardwareTemplate)
+
+    currentHardware = db[currentHardwareId]
+
+    currentHardware.check_in(checkInAmount)
+
+    print(checkInAmount)
+    
+    #TODO CHANGE IMPLEMENTATION FOR CHECKED OUT AMOUNT TO GET FROM SERVER
+    output = {"id":int(hardwareId),
+             "name":"HardwareSet_"+hardwareId,
+             "capacity":currentHardware.get_capacity(),
+             "availability":currentHardware.get_availability(),
+             "checkedOutAmount":checkInAmount
+             }
+
     return jsonify(hardwareTemplate = output)
 
 @app.route("/")
@@ -86,3 +114,4 @@ def index():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
+
