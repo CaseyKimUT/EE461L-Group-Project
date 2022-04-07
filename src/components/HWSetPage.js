@@ -19,7 +19,7 @@ function HWSetPage(){
     useEffect(() => {
       for(let i = 0;i<HardwareArray.length;i++){
         let hardwareTemplate = {}              
-        fetch("http://127.0.0.1:5000/checkOut/" + i + "/" + checkOut[i] + "/" + hardwareTemplate)
+        fetch("/checkOut/" + i + "/" + checkOut[i] + "/" + hardwareTemplate)
           .then(response => 
             response.json()
           )
@@ -87,7 +87,7 @@ function HWSetPage(){
               {/*Probably can send another variable with this*/}
               let hardwareTemplate = {}     
           
-              fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
+              fetch("/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
                 .then(response => 
                   response.json()
                 )
@@ -162,7 +162,7 @@ function HWSetPage(){
           {/*Probably can send another variable with this*/}
           let hardwareTemplate = {}     
       
-          fetch("http://127.0.0.1:5000/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
+          fetch("/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
             .then(response => 
               response.json()
             )
