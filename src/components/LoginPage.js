@@ -17,7 +17,7 @@ function LoginPage() {
         <div>
             <form onSubmit={(e) => {
                 e.preventDefault()
-                fetch("http://127.0.0.1:5000/check_correct/" + username + "/" + password)
+                fetch("/check_correct/" + username + "/" + password)
                         .then(response => 
                             response.json()
                         )
