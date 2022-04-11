@@ -5,14 +5,14 @@ import hardwareSet
 
 
 # comment out on deployment
-from flask_cors import CORS
+#from flask_cors import CORS
 
 
 
 app = Flask(__name__, static_folder="/build", static_url_path="")
 
 # comment out on deployment
-CORS(app)
+#CORS(app)
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
 hwSet1=hardwareSet.HWSet(200)
@@ -125,6 +125,24 @@ def getUserProjects(userID:str,projectTemplate):
     print(projectTemplate)
 
     return jsonify(projectTemplate)
+
+# Login and SignIn information
+# TO BE DELETED LATER: Database
+
+database = {"user1": "password1", "user2": "password2"}
+
+ # Will update with actual database later. Hardcoded account for time being 
+@app.route("/check_correct/<username>/<password>", methods = ["GET"])
+def check_correct(username:str, password:str):
+    if username in database:
+        if database[username] == password:
+            output = "logged In to " + username
+        else:
+            output = "incorrect username / password"
+    else:
+        output = "Account doesn't exist"
+    
+    return jsonify(error = output)
 
 
 @app.route("/")
