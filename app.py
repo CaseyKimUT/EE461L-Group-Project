@@ -1,8 +1,5 @@
-from genericpath import getsize
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
-from matplotlib.style import available
-from numpy import size
 
 import hardwareSet
 
@@ -18,19 +15,19 @@ app = Flask(__name__, static_folder="./build", static_url_path="")
 #CORS(app)
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
-hwSet1=hardwareSet.HWSet(250)
-hwSet2=hardwareSet.HWSet(250)
+hwSet1=hardwareSet.HWSet(200)
+hwSet2=hardwareSet.HWSet(150)
 
 ##TODO implement with mongoDB
 db = {0:hwSet1,
       1:hwSet2}
 
-#TODO implement on frontend, maybe not needed idk
+@app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
     """initializes a document for all hardware sets in database
        format ex
        { 
-          0:{ 
+          { 
             id:0,
             name:HardwareSet_0",
             capacity:300,
@@ -41,22 +38,20 @@ def initializeHardwarePage(hardwareTemplate):
     """
     print(hardwareTemplate)
 
-    output = {}
+    hardwareTemplate = []
 
     for x in range(len(db)):
-        
         currentHardware = db[x]
-    
         hardwareFormat = {
             "id":int(x),
             "name":"HardwareSet_"+str(x),
             "capacity":currentHardware.get_capacity(),
             "availability":currentHardware.get_availability()
         }
-        output[x] = hardwareFormat
-        print(output)
+        hardwareTemplate.append(hardwareFormat)
+        print(hardwareTemplate[x])
 
-    return jsonify(output)
+    return jsonify(hardwareTemplate)
 
 @app.route("/checkOut/<hardwareId>/<checkoutAmount>/<hardwareTemplate>", methods=["GET"])
 def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
@@ -107,6 +102,48 @@ def checkIn(hardwareId:int,checkInAmount:int,hardwareTemplate):
              }
 
     return jsonify(hardwareTemplate = output)
+
+
+@app.route("/getUserProjects/<userID>/<projectTemplate>", methods=["GET"])
+def getUserProjects(userID:str,projectTemplate):
+    """
+    Method returns all projects associated with userID
+    """
+    # TODO get user id from database
+    print("user is " + userID)
+
+    projectTemplate = []
+
+    #TODO get from database
+    for x in range(2):
+        template = {
+            "projectName":"hello" + str(x),
+            "checkedOut":[20,20]
+        }
+        projectTemplate.append(template)
+
+    print(projectTemplate)
+
+    return jsonify(projectTemplate)
+
+# Login and SignIn information
+# TO BE DELETED LATER: Database
+
+database = {"user1": "password1", "user2": "password2"}
+
+ # Will update with actual database later. Hardcoded account for time being 
+@app.route("/check_correct/<username>/<password>", methods = ["GET"])
+def check_correct(username:str, password:str):
+    if username in database:
+        if database[username] == password:
+            output = "logged In to " + username
+        else:
+            output = "incorrect username / password"
+    else:
+        output = "Account doesn't exist"
+    
+    return jsonify(error = output)
+
 
 @app.route("/")
 def index():

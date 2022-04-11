@@ -1,63 +1,100 @@
-import { areArraysEqual } from '@mui/base';
-import { render } from '@testing-library/react';
 import {React,useState,useEffect} from 'react';
+  
 
-
-{/*TODO Change*/}
 let HardwareArray = [
   {id: 0,name:"HardwareSet_0",capacity:300,availability:300},
   {id: 1,name:"HardwareSet_1",capacity:300,availability:300}
   ]
+  
+let projectsArray = [
+  {
+   projectName:"dummy",
+   checkedOut:[-1,-1]
+  }
+]
+
+//TODO Change to server
+let userID = "test"
 
 function HWSetPage(){
 
     const [checkOut,setCheckout] = useState(new Array(HardwareArray.length).fill(0))
     const [checkIn,setCheckIn] = useState(new Array(HardwareArray.length).fill(0))
+
     const [ownedSets,setOwnedSets] = useState(new Array(HardwareArray.length).fill(0))
+
+    const [currentProjectIndex,setCurrentProjectIndex] = useState(0)
     const [rerender,setRerender] = useState(0)
 
     useEffect(() => {
-      for(let i = 0;i<HardwareArray.length;i++){
+      getProjects();      
+      refreshHardwareArray();
+    },[]);
+
+    function displayProject(){
+      return(
+        "PROJECTNAME: " + projectsArray[currentProjectIndex].projectName
+      );
+    }
+
+    //gets checkedOut num from flask
+    function updateOwnedSets(){
+      //getProjects() //TODO uncomment when database implemented
+      setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
+    }
+
+    function changeProjectButton(){
+      return(
+        <button
+          variant="outlined"
+          onClick={() => {
+            setCurrentProjectIndex(currentProjectIndex => currentProjectIndex + 1)
+            if(currentProjectIndex==projectsArray.length-1){
+              setCurrentProjectIndex(currentProjectIndex => currentProjectIndex = 0)
+            }
+            updateOwnedSets()
+            console.log("Projects length is " + (projectsArray.length - 1))
+            console.log("Project index is " + currentProjectIndex)
+          }
+          }>       
+        Change Project
+        </button>
+      );
+
+    }
+
+    function getProjects(){
+      let projectTemplate = {}
+      fetch("/getUserProjects/" + userID + "/" + projectTemplate)
+        .then(response => 
+          response.json()
+        )
+        .then(data => {
+          projectsArray = data          
+          {/*forces rerender, probably better way to do this */}
+          setRerender(render => render - 1)                             
+          setRerender(render => render + 1)    
+          console.log("projects is " + projectsArray)
+        }).catch(error => {console.log(error)})           
+    }
+
+    //fetches from flask to update local array for all hardware
+    function refreshHardwareArray(){
         let hardwareTemplate = {}              
-        fetch("/checkOut/" + i + "/" + checkOut[i] + "/" + hardwareTemplate)
+        fetch("/initializeHardwarePage/" + hardwareTemplate)
           .then(response => 
             response.json()
           )
           .then(data => {
-          {/*Data stored in hardwareTemplate from flask*/}
-            let updatedHardware = ({
-              id: data.hardwareTemplate.id,
-              name: data.hardwareTemplate.name,
-              capacity: data.hardwareTemplate.capacity,
-              availability: data.hardwareTemplate.availability,
-            });
-
-            HardwareArray[updatedHardware.id] = updatedHardware
-
-            {/*Current implementation adds to local owned sets                   
-              TODO change so updates with server sets instead
-            */}
-            let temp = ownedSets
-            temp[i] = temp[i] + data.hardwareTemplate.checkedOutAmount
-            setOwnedSets(ownedSets => ownedSets = temp)
-  
-            console.log("checked out" + data.hardwareTemplate.checkedOutAmount)
+            HardwareArray = data
             {/*forces rerender, probably better way to do this */}
             setRerender(render => render - 1)                             
             setRerender(render => render + 1)        
-            console.log(data)
           })
-
           .catch(error => {
             console.log(error)
-          })                        
-          console.log("Owned sets is " + ownedSets)
-
-          let temp = checkOut
-          temp[i] = 0
-          setCheckout(checkOut => checkOut = temp)                                               
-        } 
-    },[]);
+          })                                                                 
+    }
 
     //Functions for Check Out 
     function incrementCheckOutValue(i){
@@ -115,7 +152,6 @@ function HWSetPage(){
                     setRerender(render => render + 1)        
                     console.log(data)
                   })
-
                   .catch(error => {
                     console.log(error)
                   })                        
@@ -210,6 +246,9 @@ function HWSetPage(){
   function displayHardware(){ 
 	  return (
       <div>
+        {displayProject()}
+        {" "} 
+        {changeProjectButton()}
 	      {HardwareArray.map((value,i) => (
           <div key = {i}>
 					<h3>id is: {value.id}                     </h3>
