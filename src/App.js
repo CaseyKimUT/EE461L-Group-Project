@@ -7,12 +7,13 @@ import HWSetPage from './components/HWSetPage';
 import DatasetsPage from './components/DatasetsPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './components/SignUpPage';
+import Dashboard from './components/Dashboard';
 
 function App() {
   return (
     <div>
       <Router>
-        <Tabs/>
+        {/* <Tabs/> */}
         <Routes>
           <Route exact path='/' element={<LoginPage/>}/>
 
@@ -21,6 +22,7 @@ function App() {
 
           <Route exact path='/datasets' element={<DatasetsPage/>}/>
           <Route exact path='/signup' element={<SignUpPage/>}/>
+          <Route exact path='/dashboard' element={<Dashboard/>}/>
           
         </Routes>
       </Router>

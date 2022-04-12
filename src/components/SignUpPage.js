@@ -16,11 +16,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 function Copyright(props) {
   return (
     <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
+      {'Created by: '}
+      <Link color="inherit" href="https://github.com/CaseyKimUT/EE461L-Group-Project">
         EE461L Group 
       </Link>{' '}
-      {new Date().getFullYear()}
       {'.'}
     </Typography>
   );
@@ -96,7 +95,7 @@ export default function SignUp() {
                 </Link> */}
               </Grid>
               <Grid item>
-                <Link href="signin" variant="body2">
+                <Link href="/" variant="body2">
                   {"Sign In"}
                 </Link>
               </Grid>

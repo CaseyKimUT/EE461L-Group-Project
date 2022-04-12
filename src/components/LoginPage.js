@@ -13,19 +13,19 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Route, useNavigate } from 'react-router-dom';
 
 function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        EE461L Group 
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+    return (
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        {'Created by: '}
+        <Link color="inherit" href="https://github.com/CaseyKimUT/EE461L-Group-Project">
+          EE461L Group 
+        </Link>{' '}
+        {'.'}
+      </Typography>
+    );
+  }
 
 const theme = createTheme();
 
@@ -34,14 +34,9 @@ export default function SignIn() {
     // const [password, setPassword] = useState("")
     const [error, setError]= useState("")
 
-    const handleSubmit = (event) => {
-//     event.preventDefault();
-//     const data = new FormData(event.currentTarget);
-//     console.log({
-//       email: data.get('email'),
-//       password: data.get('password'),
-//     });
+    let navigate = useNavigate();
 
+    const handleSubmit = (event) => {
         event.preventDefault()
         const formData = new FormData(event.currentTarget)
         
@@ -61,7 +56,19 @@ export default function SignIn() {
                     console.log(error)
                     
                 })
+        
+        navigate('/dashboard')
+//     event.preventDefault();
+//     const data = new FormData(event.currentTarget);
+//     console.log({
+//       email: data.get('email'),
+//       password: data.get('password'),
+//     });
+
+        
     };
+        
+
 
   return (
     <ThemeProvider theme={theme}>
