@@ -2,6 +2,7 @@ from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
 
 import hardwareSet
+import wfdb
 
 
 # comment out on deployment
@@ -143,6 +144,12 @@ def check_correct(username:str, password:str):
         output = "Account doesn't exist"
     
     return jsonify(error = output)
+
+@app.route("/dataset/<datasetkey>", methods=["GET"])
+def dataset(datasetkey:str):
+
+    record_list = wfdb.get_record_list(datasetkey)
+    return jsonify(recordNum=len(record_list))
 
 
 @app.route("/")
