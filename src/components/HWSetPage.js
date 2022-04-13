@@ -1,4 +1,5 @@
 import {React,useState,useEffect} from 'react';
+import NavBar from './NavBar';
 
   
 
@@ -289,6 +290,7 @@ function HWSetPage(){
 
 	return(
 			<div>
+        <NavBar/>
 				{displayHardware()}
 			</div>
 		)

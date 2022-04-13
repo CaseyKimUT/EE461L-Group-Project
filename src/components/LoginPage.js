@@ -57,7 +57,7 @@ export default function SignIn() {
                     
                 })
         
-        navigate('/dashboard')
+        navigate('/hwset')
 //     event.preventDefault();
 //     const data = new FormData(event.currentTarget);
 //     console.log({

@@ -7,7 +7,7 @@ import HWSetPage from './components/HWSetPage';
 import DatasetsPage from './components/DatasetsPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './components/SignUpPage';
-import Dashboard from './components/Dashboard';
+
 
 function App() {
   return (
@@ -19,10 +19,8 @@ function App() {
 
           {/* VERY LIKELY TO CHANGE DEPENDENT ON GETTING PROJECT/ACCOUNT INFO*/}
           <Route exact path='/hwset' element={<HWSetPage/>}/> 
-
           <Route exact path='/datasets' element={<DatasetsPage/>}/>
           <Route exact path='/signup' element={<SignUpPage/>}/>
-          <Route exact path='/dashboard' element={<Dashboard/>}/>
           
         </Routes>
       </Router>
