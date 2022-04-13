@@ -22,15 +22,7 @@ class DatasetItem extends React.Component {
                 </Stack>
 
                 <div>
-                    {"TEXT FOR META DATA"}
-                </div>
-                
-                <div>
-                    {"TEXT FOR META DATA"}
-                </div>
-                
-                <div>
-                    {"TEXT FOR META DATA"}
+                    {"Number of Records: " + this.props.recordnum}
                 </div>
 
             </Stack>
