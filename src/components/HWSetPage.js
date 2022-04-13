@@ -65,7 +65,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("/getUserProjects/" + userID + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
@@ -81,7 +81,7 @@ function HWSetPage(){
     //fetches from flask to update local array for all hardware
     function refreshHardwareArray(){
         let hardwareTemplate = {}              
-        fetch("http://127.0.0.1:5000/initializeHardwarePage/" + hardwareTemplate)
+        fetch("/initializeHardwarePage/" + hardwareTemplate)
           .then(response => 
             response.json()
           )
@@ -124,7 +124,7 @@ function HWSetPage(){
               {/*Probably can send another variable with this*/}
               let hardwareTemplate = {}     
           
-              fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
+              fetch("/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
                 .then(response => 
                   response.json()
                 )
@@ -198,7 +198,7 @@ function HWSetPage(){
           {/*Probably can send another variable with this*/}
           let hardwareTemplate = {}     
       
-          fetch("http://127.0.0.1:5000/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
+          fetch("/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
             .then(response => 
               response.json()
             )

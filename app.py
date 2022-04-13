@@ -9,7 +9,7 @@ import hardwareSet
 
 
 
-app = Flask(__name__, static_folder="/build", static_url_path="")
+app = Flask(__name__, static_folder="./build", static_url_path="")
 
 # comment out on deployment
 #CORS(app)
@@ -147,8 +147,11 @@ def check_correct(username:str, password:str):
 
 @app.route("/")
 def index():
-    return send_from_directory("/build", "index.html")
+    return send_from_directory("./build", "index.html")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
 
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
