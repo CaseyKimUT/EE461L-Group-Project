@@ -41,15 +41,15 @@ function DatasetsPage() {
 
     return (
         <Stack direction='column' alignItems="flex-start" justifyContent='flex-start' spacing={4}>
-            <DatasetItem dbname='ABDOMINAL AND DIRECT FETAL ECG' dblink={dblink1} dllink={dllink1} recordnum={getRecordNum('dbKey1')}/>
+            <DatasetItem dbname='ABDOMINAL AND DIRECT FETAL ECG' dblink={dblink1} dllink={dllink1} recordnum={getRecordNum(dbKey1)}/>
 
-            <DatasetItem dbname='AF TERMINATION CHALLENGE' dblink={dblink2} dllink={dllink2} recordnum={getRecordNum('dbKey2')}/>
+            <DatasetItem dbname='AF TERMINATION CHALLENGE' dblink={dblink2} dllink={dllink2} recordnum={getRecordNum(dbKey2)}/>
 
-            <DatasetItem dbname='ANSI/AAMI EC13 TEST WAVEFORMS' dblink={dblink3} dllink={dllink3} recordnum={getRecordNum('dbKey3')}/>
+            <DatasetItem dbname='ANSI/AAMI EC13 TEST WAVEFORMS' dblink={dblink3} dllink={dllink3} recordnum={getRecordNum(dbKey3)}/>
 
-            <DatasetItem dbname='APNEA-ECG' dblink={dblink4} dllink={dllink4} recordnum={getRecordNum('dbKey4')}/>
+            <DatasetItem dbname='APNEA-ECG' dblink={dblink4} dllink={dllink4} recordnum={getRecordNum(dbKey4)}/>
 
-            <DatasetItem dbname='AUDITORY EVOKED POTENTIAL EEG-BIOMETRIC' dblink={dblink5} dllink={dllink5} recordnum={getRecordNum('dbKey5')}/>
+            <DatasetItem dbname='AUDITORY EVOKED POTENTIAL EEG-BIOMETRIC' dblink={dblink5} dllink={dllink5} recordnum={getRecordNum(dbKey5)}/>
         </Stack>
     );
 }
