@@ -6,14 +6,14 @@ import wfdb
 
 
 # comment out on deployment
-#from flask_cors import CORS
+from flask_cors import CORS
 
 
 
 app = Flask(__name__, static_folder="./build", static_url_path="")
 
 # comment out on deployment
-#CORS(app)
+CORS(app)
 
 #Create object hwSet1 of class hardwareSet with capacity of 250
 hwSet1=hardwareSet.HWSet(200)
@@ -22,6 +22,15 @@ hwSet2=hardwareSet.HWSet(150)
 ##TODO implement with mongoDB
 db = {0:hwSet1,
       1:hwSet2}
+
+#TODO implement with mongoDB
+"""projectDB = [
+    {
+        "projectName":"StarterProject",
+        "checkedOut":[0,0]
+    }"""
+    
+projectDB = []
 
 @app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
@@ -112,20 +121,30 @@ def getUserProjects(userID:str,projectTemplate):
     """
     # TODO get user id from database
     print("user is " + userID)
-
-    projectTemplate = []
-
     #TODO get from database
-    for x in range(2):
-        template = {
-            "projectName":"hello" + str(x),
-            "checkedOut":[20,20]
-        }
-        projectTemplate.append(template)
+    print(projectDB)
 
-    print(projectTemplate)
+    return jsonify(projectDB)
 
-    return jsonify(projectTemplate)
+@app.route("/createProject/<userID>/<projectName>", methods=["GET"])
+def createProject(userID:str,projectName:str):
+    """
+    Creates project to database
+        - Check if empty string sent
+        - Check if duplicate project name 
+    """
+    print("User is ",userID)
+    print("New Project Name is: " ,projectName)
+
+    newProject = {
+            "projectName":projectName,
+            "checkedOut":[0,0]
+        }   
+    
+    #TODO add to mongoDB instead
+    projectDB.append(newProject)
+    print(projectDB)
+    return("hello")
 
 # Login and SignIn information
 # TO BE DELETED LATER: Database
