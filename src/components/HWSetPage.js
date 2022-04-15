@@ -23,6 +23,8 @@ function HWSetPage(){
 
     const [ownedSets,setOwnedSets] = useState(new Array(HardwareArray.length).fill(0))
 
+    const [projectName, setProjectName] = useState("")
+
     const [currentProjectIndex,setCurrentProjectIndex] = useState(0)
     const [rerender,setRerender] = useState(0)
 
@@ -33,8 +35,38 @@ function HWSetPage(){
 
     function displayProject(){
       return(
-        "PROJECTNAME: " + projectsArray[currentProjectIndex].projectName
+        "Current Project: " + projectsArray[currentProjectIndex].projectName
       );
+    }
+
+    function displayCreateProject(){
+      return (
+        <div>
+          <label>New Project: 
+            <input type="text" value ={projectName} onChange = {(e) => setProjectName(e.target.value)}></input>
+          </label>
+          
+          <button        
+            variant="outlined"   
+            onClick={() =>
+              fetch("http://127.0.0.1:5000/createProject/" + userID + "/" + projectName)
+                .then(response => 
+                  response.json()
+                ) 
+                .then(data => { 
+                  getProjects()
+                  console.log(data)
+                {/* for some reason this causes error when clicking */}
+                }).catch(error => {
+                  getProjects()
+                  console.log(currentProjectIndex)
+                }
+                )        
+            }>       
+          Create Project
+          </button>
+        </div>
+      )   
     }
 
     //gets checkedOut num from flask
@@ -65,7 +97,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
@@ -243,32 +275,33 @@ function HWSetPage(){
     );
   }
 
+  
   function displayHardware(){ 
-	  return (
-      <div>
-        {displayProject()}
-        {" "} 
-        {changeProjectButton()}
-	      {HardwareArray.map((value,i) => (
-          <div key = {i}>
-					<h3>id is: {value.id}                     </h3>
-					<h3>name is: {value.name}                 </h3>
-					<h3>capacity is: {value.capacity}         </h3>
-				  <h3>availability is: {value.availability} </h3>                
-          <h3>There are currently {ownedSets[i]} sets checked out to you.</h3>
-          <h3>                  
-              Checkout, How many? 
-              {" "} 
-              <button onClick = {() =>decrementCheckOutValue(i)}>-</button>  
-              {" "} 
-              {checkOut[i]} 
-              {" "} 
-              <button onClick = {() =>incrementCheckOutValue(i)}>+</button>                
-              {" "}            
-              {displayCheckOutButton(value,i)}
-          </h3> 
-
-          <h3>
+    if(projectsArray.length > 0){
+	    return (
+        <div>
+          {displayProject()}
+          {" "} 
+          {changeProjectButton()}
+	        {HardwareArray.map((value,i) => (
+            <div key = {i}>
+					  <h3>id is: {value.id}                     </h3>
+					  <h3>name is: {value.name}                 </h3>
+					  <h3>capacity is: {value.capacity}         </h3>
+				    <h3>availability is: {value.availability} </h3>                
+            <h3>There are currently {ownedSets[i]} sets checked out to you.</h3>
+            <h3>                  
+                Checkout, How many? 
+                {" "} 
+                <button onClick = {() =>decrementCheckOutValue(i)}>-</button>  
+                {" "} 
+                {checkOut[i]} 
+                {" "} 
+                <button onClick = {() =>incrementCheckOutValue(i)}>+</button>                
+                {" "}            
+                {displayCheckOutButton(value,i)}
+            </h3> 
+            <h3>
               Check In, How many? 
               {" "} 
               <button onClick = {() =>decrementCheckInValue(i)}>-</button>  
@@ -278,16 +311,22 @@ function HWSetPage(){
               <button onClick = {() =>incrementCheckInValue(i)}>+</button>                
               {" "}     
               {displayCheckInButton(value,i)}      
-          </h3>     
-              
+          </h3>       
 			  </div>
        ))}
     </div>
-   )
+   );
+  } else {
+    return(<div>
+           <h3>You have no projects, please create one here!</h3>
+          </div>
+          );
+    }
 	}
 
 	return(
 			<div>
+        {displayCreateProject()}
 				{displayHardware()}
 			</div>
 		)
