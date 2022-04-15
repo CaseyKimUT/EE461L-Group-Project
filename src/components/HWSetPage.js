@@ -49,7 +49,7 @@ function HWSetPage(){
           <button        
             variant="outlined"   
             onClick={() =>
-              fetch("http://127.0.0.1:5000/createProject/" + userID + "/" + projectName)
+              fetch("/createProject/" + userID + "/" + projectName)
                 .then(response => 
                   response.json()
                 ) 
@@ -97,7 +97,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("/getUserProjects/" + userID + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
