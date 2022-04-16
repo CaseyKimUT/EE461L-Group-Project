@@ -1,3 +1,4 @@
+from unittest import result
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
 
@@ -5,23 +6,28 @@ import hardwareSet
 import wfdb
 
 
+from pymongo import MongoClient
+
+
+Client=MongoClient("mongodb+srv://Cosmic:0000@cluster0.2bflj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+
+mongoDatabase = Client.EE461L
+
 # comment out on deployment
 from flask_cors import CORS
-
-
 
 app = Flask(__name__, static_folder="./build", static_url_path="")
 
 # comment out on deployment
 CORS(app)
 
-#Create object hwSet1 of class hardwareSet with capacity of 250
-hwSet1=hardwareSet.HWSet(200)
-hwSet2=hardwareSet.HWSet(150)
 
-##TODO implement with mongoDB
-db = {0:hwSet1,
-      1:hwSet2}
+#hardware variables, default 0 before connecting to database
+HwSet1=hardwareSet.HWSet(0,0)
+HwSet2=hardwareSet.HWSet(0,0)
+
+dbHardware = {0:HwSet1,
+      1:HwSet2}
 
 #TODO implement with mongoDB
 """projectDB = [
@@ -31,6 +37,33 @@ db = {0:hwSet1,
     }"""
     
 projectDB = []
+
+def updateLocalHardware():
+   """Updates local hardware to match server's"""
+   hardware = mongoDatabase.hardware.find()
+   set1 = hardware.next()
+   set2 = hardware.next()
+   HwSet1.set_availability(set1.get("availability"))
+   HwSet2.set_availability(set2.get("availability"))
+   
+   HwSet1.set_capacity(set1.get("capacity"))
+   HwSet2.set_capacity(set2.get("capacity"))
+
+
+def updateServerHardware():
+   """Updates server baased on how much changed locally"""
+   print(mongoDatabase.hardware.find()[0])
+
+
+   hardware = mongoDatabase.hardware.find()
+   set1 = hardware.next()
+   set2 = hardware.next()
+   
+   result = mongoDatabase.hardware.update_one({"id":0},{"$set": {'availability':HwSet1.get_availability()}})
+   print("set1 update result is ",result.modified_count)
+   result = mongoDatabase.hardware.update_one({"id":1},{"$set": {'availability':HwSet2.get_availability()}})
+   print("set2 update result is ",result.modified_count)
+ 
 
 @app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
@@ -46,12 +79,18 @@ def initializeHardwarePage(hardwareTemplate):
           ...
         }
     """
+
+    updateLocalHardware()
+
+
     print(hardwareTemplate)
 
     hardwareTemplate = []
+    
 
-    for x in range(len(db)):
-        currentHardware = db[x]
+
+    for x in range(len(dbHardware)):
+        currentHardware = dbHardware[x]
         hardwareFormat = {
             "id":int(x),
             "name":"HardwareSet_"+str(x),
@@ -73,7 +112,9 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
     #use hardwareTemplate to get user maybe??
     print(hardwareTemplate)
 
-    currentHardware = db[currentHardwareId]
+    updateLocalHardware()
+
+    currentHardware = dbHardware[currentHardwareId]
     userCheckedOut = currentHardware.get_availability()
     currentHardware.check_out(checkoutAmount)
     userCheckedOut = userCheckedOut - currentHardware.get_availability() 
@@ -86,6 +127,7 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
              "checkedOutAmount":userCheckedOut
              }
 
+    updateServerHardware()
     #print(output)
     return jsonify(hardwareTemplate = output)
 
@@ -97,19 +139,20 @@ def checkIn(hardwareId:int,checkInAmount:int,hardwareTemplate):
 
     print(hardwareTemplate)
 
-    currentHardware = db[currentHardwareId]
+    currentHardware = dbHardware[currentHardwareId]
 
     currentHardware.check_in(checkInAmount)
 
     print(checkInAmount)
     
-    #TODO CHANGE IMPLEMENTATION FOR CHECKED OUT AMOUNT TO GET FROM SERVER
     output = {"id":int(hardwareId),
              "name":"HardwareSet_"+hardwareId,
              "capacity":currentHardware.get_capacity(),
              "availability":currentHardware.get_availability(),
              "checkedOutAmount":checkInAmount
              }
+
+    updateServerHardware()
 
     return jsonify(hardwareTemplate = output)
 

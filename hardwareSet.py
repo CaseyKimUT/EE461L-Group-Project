@@ -3,9 +3,16 @@ class HWSet:
    ##Capacity --> total number of units. Initial value=qty
    ##Availability --> number of units available to check out. Initial value=Capacity
     
-    def __init__(self,quantity):
+    def __init__(self,quantity,availability):
         self.capacity = quantity
-        self.availability = self.capacity
+        self.availability = availability
+
+    def set_availability(self,availability):
+        self.availability = availability
+
+    def set_capacity(self,capacity):
+        self.capacity = capacity
+
         
     def get_availability(self):
         """accessor function to return the number of unused units"""

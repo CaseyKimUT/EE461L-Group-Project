@@ -2,8 +2,8 @@ import {React,useState,useEffect} from 'react';
   
 
 let HardwareArray = [
-  {id: 0,name:"HardwareSet_0",capacity:300,availability:300},
-  {id: 1,name:"HardwareSet_1",capacity:300,availability:300}
+  {id: 0,capacity:300,availability:300},
+  {id: 1,capacity:300,availability:300}
   ]
   
 let projectsArray = [
@@ -49,7 +49,7 @@ function HWSetPage(){
           <button        
             variant="outlined"   
             onClick={() =>
-              fetch("/createProject/" + userID + "/" + projectName)
+              fetch("http://127.0.0.1:5000/createProject/" + userID + "/" + projectName)
                 .then(response => 
                   response.json()
                 ) 
@@ -97,7 +97,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
@@ -113,7 +113,7 @@ function HWSetPage(){
     //fetches from flask to update local array for all hardware
     function refreshHardwareArray(){
         let hardwareTemplate = {}              
-        fetch("/initializeHardwarePage/" + hardwareTemplate)
+        fetch("http://127.0.0.1:5000/initializeHardwarePage/" + hardwareTemplate)
           .then(response => 
             response.json()
           )
@@ -156,7 +156,7 @@ function HWSetPage(){
               {/*Probably can send another variable with this*/}
               let hardwareTemplate = {}     
           
-              fetch("/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
+              fetch("http://127.0.0.1:5000/checkOut/" + value.id + "/" + checkOut[i] + "/" + hardwareTemplate)
                 .then(response => 
                   response.json()
                 )
@@ -230,7 +230,7 @@ function HWSetPage(){
           {/*Probably can send another variable with this*/}
           let hardwareTemplate = {}     
       
-          fetch("/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
+          fetch("http://127.0.0.1:5000/checkIn/" + value.id + "/" + checkIn[i] + "/" + hardwareTemplate)
             .then(response => 
               response.json()
             )
@@ -238,7 +238,6 @@ function HWSetPage(){
               {/*Data stored in hardwareTemplate from flask*/}
                 let updatedHardware = ({
                   id: data.hardwareTemplate.id,
-                  name: data.hardwareTemplate.name,
                   capacity: data.hardwareTemplate.capacity,
                   availability: data.hardwareTemplate.availability,
                 });
@@ -286,7 +285,6 @@ function HWSetPage(){
 	        {HardwareArray.map((value,i) => (
             <div key = {i}>
 					  <h3>id is: {value.id}                     </h3>
-					  <h3>name is: {value.name}                 </h3>
 					  <h3>capacity is: {value.capacity}         </h3>
 				    <h3>availability is: {value.availability} </h3>                
             <h3>There are currently {ownedSets[i]} sets checked out to you.</h3>
@@ -318,7 +316,7 @@ function HWSetPage(){
    );
   } else {
     return(<div>
-           <h3>You have no projects, please create one here!</h3>
+           <h3>You have no projects, please create one here or join an existing one!</h3>
           </div>
           );
     }
