@@ -1,14 +1,18 @@
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
+from gridfs import Database
+from pymongo import MongoClient
 
 import hardwareSet
 import wfdb
+import encrypt
 
+client = MongoClient("mongodb+srv://stephanieA:jzI0dQyVTBviEzgF@ee461ldb.lqgx1.mongodb.net/accounts?retryWrites=true&w=majority")
 
 # comment out on deployment
 #from flask_cors import CORS
 
-
+database = client["accounts"]
 
 app = Flask(__name__, static_folder="./build", static_url_path="")
 
@@ -130,20 +134,46 @@ def getUserProjects(userID:str,projectTemplate):
 # Login and SignIn information
 # TO BE DELETED LATER: Database
 
-database = {"user1": "password1", "user2": "password2"}
+# database = {"user1": "password1", "user2": "password2"}
 
- # Will update with actual database later. Hardcoded account for time being 
+
+ # Checks to see if an inputed username and password are in the database to log in 
 @app.route("/check_correct/<username>/<password>", methods = ["GET"])
 def check_correct(username:str, password:str):
-    if username in database:
-        if database[username] == password:
-            output = "logged In to " + username
+    collections = database.list_collection_names()
+    if username in collections:
+        password = encrypt.encrypt(password)
+        account_info = database[username].find_one()
+        if account_info["account"]["password"] == password:
+            output = username
         else:
-            output = "incorrect username / password"
+            output = "Incorrect username or password"
     else:
-        output = "Account doesn't exist"
-    
+        output = "Incorrect username or password"
+    print(output)
     return jsonify(error = output)
+
+# Creates a new account with the given username and password
+@app.route("/create_account/<username>/<password>", methods = ["GET"])
+def create_account(username: str, password: str):
+    collections = database.list_collection_names()
+    if username in collections:
+        output = "An account with this username already exists"
+    else:
+        user = database[username]
+        password = encrypt.encrypt(password)
+        account_info = {
+            "account": {
+                "password": password,
+                "projects": []
+            }
+        }
+        user.insert_one(account_info)
+        output = "Created account!"
+    print(output)
+    return jsonify(message = output)
+
+
 
 @app.route("/dataset/<datasetkey>", methods=["GET"])
 def dataset(datasetkey:str):

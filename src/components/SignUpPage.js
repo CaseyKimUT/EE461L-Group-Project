@@ -22,7 +22,16 @@ function SignUpPage() {
                 setSUPError("Passwords must match")
                 
             } else {
-                setSUPError("")
+                fetch("/create_account/" + username + "/" + password)
+                    .then(response =>
+                        response.json()
+                    )
+                    .then(data => {
+                        setSUPError(data.message)
+                    })
+                    .catch(error => {
+                        console.log(error)
+                    })
                 alert(newUser + " " + newPass + " " + confirmPass)
             }}}>
             <label>Username: 
