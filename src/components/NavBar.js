@@ -27,17 +27,19 @@ export default function ButtonAppBar() {
             <Toolbar>
               <Button 
                 color="inherit"
-                onClick={() => {
-                  navigate("/hwset");
-                }
-              }> Projects </Button>
+                href="/hwset"
+                // onClick={() => {
+                //   navigate("/hwset");
+                // }}
+              > Projects </Button>
 
               <Button 
                 color="inherit"
-                onClick={() => {
-                  navigate("/datasets");
-                }
-              }>DataSets</Button>
+                href="/datasets"
+                // onClick={() => {
+                //   navigate("/datasets");
+                // }}
+              >DataSets</Button>
               <Typography
                 variant="h6"
                 component="div"
@@ -50,10 +52,11 @@ export default function ButtonAppBar() {
               <Box color="inherit"></Box>
               <Button 
                 color="inherit"
-                onClick={() => {
-                  navigate("/");
-                }
-                }>Logout</Button>
+                href="/"
+                // onClick={() => {
+                //   navigate("/");
+                // }}
+                >Logout</Button>
             </Toolbar>
           </AppBar>
         </ThemeProvider>

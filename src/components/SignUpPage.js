@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -12,6 +13,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { Route, useNavigate } from 'react-router-dom';
+import { Alert } from '@mui/material';
 
 function Copyright(props) {
   return (
@@ -28,14 +31,46 @@ function Copyright(props) {
 const theme = createTheme();
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-  };
+  const [error, setError]= useState("")
+
+
+    let navigate = useNavigate();
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+        const formData = new FormData(event.currentTarget)
+        
+        console.log({
+                  username: formData.get('username'),
+                  password: formData.get('password'),
+                });
+        
+        fetch("http://127.0.0.1:5000/check_correct/" + formData.get('username') + "/" + formData.get('password'))
+                .then(response => {
+                  console.log(response)
+                  if (response.ok) {
+                        return response.json()
+                    } else {
+                        throw new Error('Something went wrong ...')
+                    }
+                }
+                )
+                .then(data => {
+                  
+                  console.log(data)
+                  console.log(data.message)
+                  if (data.correct) {
+                      console.log("navigating to hwset...")
+                      navigate("/hwset")
+                  } else {
+                      setError(data.message)
+                  }
+                })
+                .catch(e => {
+                    console.log(e)
+                    // setError(e.message)
+                })   
+    };
 
   return (
     <ThemeProvider theme={theme}>
@@ -101,6 +136,7 @@ export default function SignUp() {
               </Grid>
             </Grid>
           </Box>
+          {error && <Alert severity="error">{error}</Alert>}
         </Box>
         <Copyright sx={{ mt: 8, mb: 4 }} />
       </Container>
