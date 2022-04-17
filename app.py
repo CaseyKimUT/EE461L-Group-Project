@@ -82,6 +82,15 @@ def updateServerProject(projectName:str,ownedSets:str):
     
 
 
+#TODO implement with mongoDB
+"""projectDB = [
+    {
+        "projectName":"StarterProject",
+        "checkedOut":[0,0]
+    }"""
+    
+projectDB = []
+
 @app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
     """initializes a document for all hardware sets in database
@@ -271,25 +280,32 @@ def joinProject(userID:str,projectName:str):
  # Checks to see if an inputed username and password are in the database to log in 
 @app.route("/check_correct/<username>/<password>", methods = ["GET"])
 def check_correct(username:str, password:str):
+    output = {"correct":False, "message":""}
+    
     collections = database.list_collection_names()
+
     if username in collections:
         password = encrypt.encrypt(password)
         account_info = database[username].find_one()
         if account_info["password"] == password:
-            output = account_info["projects"]
+            output["correct"] = True
+            output["message"] = account_info["projects"]
+            
         else:
-            output = "Incorrect username or password"
+            output["message"] = "Incorrect username / password"
     else:
-        output = "Incorrect username or password"
+        output["message"] = "Account doesn't exist"
     print(output)
-    return jsonify(message = output)
+    return jsonify(output)
 
 # Creates a new account with the given username and password
 @app.route("/create_account/<username>/<password>", methods = ["GET"])
 def create_account(username: str, password: str):
+    output = {"correct":False, "message":""}
     collections = database.list_collection_names()
     if username in collections:
-        output = "An account with this username already exists"
+        output['message'] = "An account with this username already exists"
+        output['correct'] = False
     else:
         user = database[username]
         password = encrypt.encrypt(password)
@@ -298,9 +314,10 @@ def create_account(username: str, password: str):
             "projects": []
         }
         user.insert_one(account_info)
-        output = "Created account!"
+        output['message'] = "Created account!"
+        output['correct'] = True
     print(output)
-    return jsonify(message = output)
+    return jsonify(output)
 
 
 
