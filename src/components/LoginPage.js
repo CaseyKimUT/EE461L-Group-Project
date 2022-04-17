@@ -17,6 +17,11 @@ import { Route, useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 
+export let account_info = {
+  "username": "",
+  "projects": []
+}
+
 function Copyright(props) {
     return (
       <Typography variant="body2" color="text.secondary" align="center" {...props}>
@@ -31,7 +36,7 @@ function Copyright(props) {
 
 const theme = createTheme();
 
-export default function SignIn() {
+export default function LoginPage() {
     // const [username, setUsername] = useState("")
     // const [password, setPassword] = useState("")
     const [error, setError]= useState("")
@@ -63,6 +68,9 @@ export default function SignIn() {
                   console.log(data)
                   console.log(data.message)
                   if (data.correct) {
+                      account_info["username"] = formData.get('username')
+                      account_info["projects"] = data.message
+                      console.log(account_info)
                       console.log("navigating to hwset...")
                       navigate("/hwset")
                   } else {

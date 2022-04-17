@@ -281,16 +281,21 @@ def joinProject(userID:str,projectName:str):
 @app.route("/check_correct/<username>/<password>", methods = ["GET"])
 def check_correct(username:str, password:str):
     output = {"correct":False, "message":""}
+    
+    collections = database.list_collection_names()
 
-    if username in database:
-        if database[username] == password:
+    if username in collections:
+        password = encrypt.encrypt(password)
+        account_info = database[username].find_one()
+        if account_info["password"] == password:
             output["correct"] = True
-            output["message"] = "Login Successful"
+            output["message"] = account_info["projects"]
+            
         else:
             output["message"] = "Incorrect username / password"
     else:
         output["message"] = "Account doesn't exist"
-
+    print(output)
     return jsonify(output)
 
 # Creates a new account with the given username and password
