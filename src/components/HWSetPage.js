@@ -1,5 +1,4 @@
 import {React,useState,useEffect} from 'react';
-import NavBar from './NavBar';
 import LoginPage from './LoginPage';
 import {account_info} from './LoginPage'
 
@@ -355,9 +354,7 @@ function HWSetPage(){
 
 	return(
 			<div>
-      <NavBar/>
         Current user is {account_info.username}
-
         {displayCreateProject()}
 				{displayHardware()}
 			</div>

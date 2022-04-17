@@ -1,7 +1,6 @@
 import React from 'react';
 import DatasetItem from './DatasetItem';
 import { Stack } from '@mui/material';
-import NavBar from './NavBar';
 
 /*
  * page for datasets; can view, download, and see how many records there are for each dataset
@@ -28,21 +27,17 @@ const dsKey5='auditory-eeg'
 
 function DatasetsPage() {
     return (
-        <div>
-            <NavBar/>
+        <Stack direction='column' alignItems="flex-start" justifyContent='flex-start' spacing={4}>
+            <DatasetItem dsname='ABDOMINAL AND DIRECT FETAL ECG' dslink={dslink1} dllink={dllink1} dskey={dsKey1}/>
 
-            <Stack direction='column' alignItems="flex-start" justifyContent='flex-start' spacing={4}>
-                <DatasetItem dsname='ABDOMINAL AND DIRECT FETAL ECG' dslink={dslink1} dllink={dllink1} dskey={dsKey1}/>
+            <DatasetItem dsname='AF TERMINATION CHALLENGE' dslink={dslink2} dllink={dllink2} dskey={dsKey2}/>
 
-                <DatasetItem dsname='AF TERMINATION CHALLENGE' dslink={dslink2} dllink={dllink2} dskey={dsKey2}/>
+            <DatasetItem dsname='ANSI/AAMI EC13 TEST WAVEFORMS' dslink={dslink3} dllink={dllink3} dskey={dsKey3}/>
 
-                <DatasetItem dsname='ANSI/AAMI EC13 TEST WAVEFORMS' dslink={dslink3} dllink={dllink3} dskey={dsKey3}/>
+            <DatasetItem dsname='APNEA-ECG' dslink={dslink4} dllink={dllink4} dskey={dsKey4}/>
 
-                <DatasetItem dsname='APNEA-ECG' dslink={dslink4} dllink={dllink4} dskey={dsKey4}/>
-
-                <DatasetItem dsname='AUDITORY EVOKED POTENTIAL EEG-BIOMETRIC' dslink={dslink5} dllink={dllink5} dskey={dsKey5}/>
-            </Stack>
-        </div>
+            <DatasetItem dsname='AUDITORY EVOKED POTENTIAL EEG-BIOMETRIC' dslink={dslink5} dllink={dllink5} dskey={dsKey5}/>
+        </Stack>
     );
 }
 
