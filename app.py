@@ -1,6 +1,8 @@
+from getpass import getuser
 from unittest import result
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
+from pandas import array
 
 import hardwareSet
 import wfdb
@@ -9,9 +11,14 @@ import wfdb
 from pymongo import MongoClient
 
 
-Client=MongoClient("mongodb+srv://Cosmic:0000@cluster0.2bflj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+#Client=MongoClient("mongodb+srv://Cosmic:0000@cluster0.2bflj.mongodb.net/myFirstDatabase?retryWrites=true&w=majority")
+Client = MongoClient("mongodb+srv://Cosmic:0000@ee461ldb.lqgx1.mongodb.net/EE461LDB?retryWrites=true&w=majority")
 
-mongoDatabase = Client.EE461L
+
+mongoHardwareDatabase = Client.hardwareSets
+mongoProjectsDatabase = Client.projects
+
+
 
 # comment out on deployment
 from flask_cors import CORS
@@ -30,17 +37,11 @@ dbHardware = {0:HwSet1,
       1:HwSet2}
 
 #TODO implement with mongoDB
-"""projectDB = [
-    {
-        "projectName":"StarterProject",
-        "checkedOut":[0,0]
-    }"""
-    
 projectDB = []
 
 def updateLocalHardware():
    """Updates local hardware to match server's"""
-   hardware = mongoDatabase.hardware.find()
+   hardware = mongoHardwareDatabase.hardware.find()
    set1 = hardware.next()
    set2 = hardware.next()
    HwSet1.set_availability(set1.get("availability"))
@@ -52,18 +53,42 @@ def updateLocalHardware():
 
 def updateServerHardware():
    """Updates server baased on how much changed locally"""
-   print(mongoDatabase.hardware.find()[0])
-
-
-   hardware = mongoDatabase.hardware.find()
+   print(mongoHardwareDatabase.hardware.find()[0])
+   hardware = mongoHardwareDatabase.hardware.find()
    set1 = hardware.next()
    set2 = hardware.next()
-   
-   result = mongoDatabase.hardware.update_one({"id":0},{"$set": {'availability':HwSet1.get_availability()}})
+   result = mongoHardwareDatabase.hardware.update_one({"id":0},{"$set": {'availability':HwSet1.get_availability()}})
    print("set1 update result is ",result.modified_count)
-   result = mongoDatabase.hardware.update_one({"id":1},{"$set": {'availability':HwSet2.get_availability()}})
+   result = mongoHardwareDatabase.hardware.update_one({"id":1},{"$set": {'availability':HwSet2.get_availability()}})
    print("set2 update result is ",result.modified_count)
  
+
+@app.route("/updateServerProject/<projectName>/<ownedSets>", methods=["GET"])
+def updateServerProject(projectName:str,ownedSets:array):
+    result = "Admin text, change to whatever"
+    projects = mongoProjectsDatabase.userProjects.find()
+
+    #convert to name that can send to mongodb
+    convertedName = str(projectName)
+
+    #convert ownedsets string to array
+    firstVar = ownedSets.split(',', 1)[0] 
+    secondVar = ownedSets.split(',',1)[1]
+    print(firstVar)
+    print(secondVar)
+
+    for project in projects:
+        print("Current project name is ",project.get("projectName"))
+        if(projectName == project.get("projectName")):
+            mongoProjectsDatabase.userProjects.update_one({"projectName":convertedName},{"$set": {"checkedOut":[5,4]}}) 
+            break
+        else:
+            result = "Name not in Database!"
+
+
+    return (jsonify(result))
+    
+
 
 @app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
@@ -79,16 +104,10 @@ def initializeHardwarePage(hardwareTemplate):
           ...
         }
     """
-
+    #print(hardwareTemplate)
     updateLocalHardware()
-
-
-    print(hardwareTemplate)
-
     hardwareTemplate = []
-    
-
-
+    #print("dbhardware size is",len(dbHardware))
     for x in range(len(dbHardware)):
         currentHardware = dbHardware[x]
         hardwareFormat = {
@@ -98,7 +117,7 @@ def initializeHardwarePage(hardwareTemplate):
             "availability":currentHardware.get_availability()
         }
         hardwareTemplate.append(hardwareFormat)
-        print(hardwareTemplate[x])
+        #print(hardwareTemplate[x])
 
     return jsonify(hardwareTemplate)
 
@@ -163,11 +182,27 @@ def getUserProjects(userID:str,projectTemplate):
     Method returns all projects associated with userID
     """
     # TODO get user id from database
-    print("user is " + userID)
-    #TODO get from database
+    #print("user is " + userID)
+
+    tempDB = []
+    
+    projects = mongoProjectsDatabase.userProjects.find()
+
+    for project in projects:
+        if(userID in project.get("users")):
+            print(userID)
+            newProject = {
+               "projectName":project.get("projectName"),
+               "checkedOut":project.get("checkedOut")
+            }
+            tempDB.append(newProject)
+       
+    projectDB = tempDB
     print(projectDB)
 
     return jsonify(projectDB)
+
+
 
 @app.route("/createProject/<userID>/<projectName>", methods=["GET"])
 def createProject(userID:str,projectName:str):

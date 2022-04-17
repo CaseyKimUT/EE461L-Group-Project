@@ -2,19 +2,19 @@ import {React,useState,useEffect} from 'react';
   
 
 let HardwareArray = [
-  {id: 0,capacity:300,availability:300},
-  {id: 1,capacity:300,availability:300}
+  {id: 0,capacity:"",availability:""},
+  {id: 1,capacity:"",availability:""}
   ]
   
 let projectsArray = [
   {
-   projectName:"dummy",
+   projectName:"",
    checkedOut:[-1,-1]
   }
 ]
 
 //TODO Change to server
-let userID = "test"
+let userID = "testUser"
 
 function HWSetPage(){
 
@@ -31,13 +31,12 @@ function HWSetPage(){
     useEffect(() => {
       getProjects();      
       refreshHardwareArray();
+      updateOwnedSets();
+      
+      console.log(currentProjectIndex)
+      
     },[]);
 
-    function displayProject(){
-      return(
-        "Current Project: " + projectsArray[currentProjectIndex].projectName
-      );
-    }
 
     function displayCreateProject(){
       return (
@@ -71,26 +70,51 @@ function HWSetPage(){
 
     //gets checkedOut num from flask
     function updateOwnedSets(){
-      //getProjects() //TODO uncomment when database implemented
+      //getProjects() //maybe dont need
       setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
     }
 
-    function changeProjectButton(){
+    function updateOwnedSetsServer(){
+
+      let tempOwnedSets = {ownedSets}
+
+      fetch("http://127.0.0.1:5000/updateServerProject/" + projectsArray[currentProjectIndex].projectName + "/" + ownedSets)
+        .then(response => 
+          response.json()
+        )
+        .then(data => {
+          {/*forces rerender, probably better way to do this */}
+          setRerender(render => render - 1)                             
+          setRerender(render => render + 1)    
+          console.log(data)
+        }).catch(error => {console.log(error)})           
+    }
+
+    function displayProject(){
       return(
-        <button
-          variant="outlined"
-          onClick={() => {
-            setCurrentProjectIndex(currentProjectIndex => currentProjectIndex + 1)
-            if(currentProjectIndex==projectsArray.length-1){
-              setCurrentProjectIndex(currentProjectIndex => currentProjectIndex = 0)
-            }
-            updateOwnedSets()
-            console.log("Projects length is " + (projectsArray.length - 1))
-            console.log("Project index is " + currentProjectIndex)
-          }
-          }>       
-        Change Project
-        </button>
+        <h3>   
+          {"Current Project " + currentProjectIndex + ":" + projectsArray[currentProjectIndex].projectName}
+            <button
+              variant="outlined"
+              onClick={() => {
+                if(currentProjectIndex==projectsArray.length-1){
+                  setCurrentProjectIndex(currentProjectIndex => currentProjectIndex = 0)
+                } else{
+                  setCurrentProjectIndex(currentProjectIndex => currentProjectIndex  + 1) 
+                  console.log("Project index is " + currentProjectIndex)  
+                  console.log("incremented currentProjectIndex")  
+                }
+                            
+                setOwnedSets(ownedSets => projectsArray[currentProjectIndex].checkedOut)
+
+                console.log("Projects length is " + (projectsArray.length - 1))
+                console.log("Checked Out should be " + projectsArray[currentProjectIndex].checkedOut)
+                console.log("Project index is " + currentProjectIndex)
+              }
+              }>       
+            Change Project
+          </button>
+        </h3>
       );
 
     }
@@ -102,7 +126,11 @@ function HWSetPage(){
           response.json()
         )
         .then(data => {
-          projectsArray = data          
+          projectsArray = data  
+
+          //testing this
+          setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
+          
           {/*forces rerender, probably better way to do this */}
           setRerender(render => render - 1)                             
           setRerender(render => render + 1)    
@@ -171,12 +199,13 @@ function HWSetPage(){
 
                     HardwareArray[updatedHardware.id] = updatedHardware
 
-                    {/*Current implementation adds to local owned sets                   
-                      TODO change so updates with server sets instead
-                    */}
+                    //update locally
                     let temp = ownedSets
                     temp[i] = temp[i] + data.hardwareTemplate.checkedOutAmount
                     setOwnedSets(ownedSets => ownedSets = temp)
+
+                    //update server
+                    updateOwnedSetsServer()
           
                     console.log("checked out" + data.hardwareTemplate.checkedOutAmount)
                     {/*forces rerender, probably better way to do this */}
@@ -281,7 +310,6 @@ function HWSetPage(){
         <div>
           {displayProject()}
           {" "} 
-          {changeProjectButton()}
 	        {HardwareArray.map((value,i) => (
             <div key = {i}>
 					  <h3>id is: {value.id}                     </h3>
