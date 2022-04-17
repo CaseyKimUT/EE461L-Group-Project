@@ -25,15 +25,13 @@ app = Flask(__name__, static_folder="./build", static_url_path="")
 # comment out on deployment
 CORS(app)
 
-
-#hardware variables, default 0 before connecting to database
+#declare needed variables
 HwSet1=hardwareSet.HWSet(0,0)
 HwSet2=hardwareSet.HWSet(0,0)
 
 dbHardware = {0:HwSet1,
       1:HwSet2}
 
-#TODO implement with mongoDB
 projectDB = []
 
 def updateLocalHardware():
@@ -123,8 +121,6 @@ def checkOut(hardwareId:int,checkoutAmount:int,hardwareTemplate):
     currentHardwareId = int(hardwareId)
     checkoutAmount = int(checkoutAmount)
 
-    #TODO change to do something with this sent in var
-    #use hardwareTemplate to get user maybe??
     print(hardwareTemplate)
 
     updateLocalHardware()
@@ -177,7 +173,6 @@ def getUserProjects(userID:str,projectTemplate):
     """
     Method returns all projects associated with userID
     """
-    # TODO get user id from database
     #print("user is " + userID)
 
     tempDB = []
@@ -207,18 +202,24 @@ def createProject(userID:str,projectName:str):
         - Check if empty string sent
         - Check if duplicate project name 
     """
-    print("User is ",userID)
-    print("New Project Name is: " ,projectName)
+    print("User is",userID)
+    print("New Project Name is:" ,projectName)
 
-    newProject = {
+    createdProject = {
             "projectName":projectName,
             "checkedOut":[0,0]
         }   
     
-    #TODO add to mongoDB instead
-    projectDB.append(newProject)
-    print(projectDB)
-    return("hello")
+    #add locally
+    projectDB.append(createdProject)
+    #add to server and add user to it
+    createdProject["users"] =[userID]
+    print("added",createdProject)
+    project = mongoProjectsDatabase.userProjects
+    project.insert_one(createdProject)
+
+    #print(projectDB)
+    return(jsonify("hello"))
 
 # Login and SignIn information
 # TO BE DELETED LATER: Database

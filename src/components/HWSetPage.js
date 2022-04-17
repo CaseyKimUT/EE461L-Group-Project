@@ -53,8 +53,7 @@ function HWSetPage(){
                 ) 
                 .then(data => { 
                   getProjects()
-                  console.log(data)
-                {/* for some reason this causes error when clicking */}
+                  console.log("Success")
                 }).catch(error => {
                   getProjects()
                   console.log(currentProjectIndex)
