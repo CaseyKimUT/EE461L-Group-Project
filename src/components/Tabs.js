@@ -11,26 +11,13 @@ function Tabs() {
             <nav>
                 <ul>
                     <li>
-                    <Link to='/'>
-                        LOGIN
-                    </Link>
-                    </li>
-                    <li>
                     <Link to='/datasets'>
                         DATASETS
                     </Link>
                     </li>
                     <li>
-                    <Link to='/hwset'>
-                        HARDWARESETS
-                    </Link>
-                    </li>
                     <Link to='/joinProjects'>
                         JOIN EXISTING PROJECTS
-                    </Link>
-                    <li>
-                    <Link to='/signup'>
-                        SIGNUP
                     </Link>
                     </li>
                 </ul>
