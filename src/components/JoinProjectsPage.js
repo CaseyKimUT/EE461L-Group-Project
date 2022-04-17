@@ -79,7 +79,7 @@ function JoinProjects(){
 
     return(
         <div>
-            <NavBar/>
+            {/* <NavBar/> */}
             {displayProjects()}
         </div>
 
