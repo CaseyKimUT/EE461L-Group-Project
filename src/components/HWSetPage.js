@@ -21,19 +21,17 @@ function HWSetPage(){
     const [checkIn,setCheckIn] = useState(new Array(HardwareArray.length).fill(0))
 
     const [ownedSets,setOwnedSets] = useState(new Array(HardwareArray.length).fill(0))
-
     const [projectName, setProjectName] = useState("")
 
+    const [currentProjectName,setCurrentProjectName] = useState('')
     const [currentProjectIndex,setCurrentProjectIndex] = useState(0)
+
     const [rerender,setRerender] = useState(0)
 
     useEffect(() => {
       getProjects();      
       refreshHardwareArray();
-      updateOwnedSets();
-      
       console.log(currentProjectIndex)
-      
     },[]);
 
 
@@ -66,11 +64,6 @@ function HWSetPage(){
       )   
     }
 
-    //gets checkedOut num from flask
-    function updateOwnedSets(){
-      //getProjects() //maybe dont need
-      setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
-    }
 
     function updateOwnedSetsServer(i){
       console.log(i)
@@ -89,7 +82,8 @@ function HWSetPage(){
     function displayProject(){
       return(
         <h3>   
-          {"Current Project " + currentProjectIndex + ":" + projectsArray[currentProjectIndex].projectName}
+          {"Current Project:" + currentProjectName}
+          {/*"Current Project " + currentProjectIndex + ":" + projectsArray[currentProjectIndex].projectName*/}
             <button
               variant="outlined"
               onClick={() => {
@@ -102,14 +96,16 @@ function HWSetPage(){
                 }
                             
                 setOwnedSets(ownedSets => projectsArray[currentProjectIndex].checkedOut)
-
-                console.log("Projects length is " + (projectsArray.length - 1))
+                setCurrentProjectName(projectName => projectsArray[currentProjectIndex].projectName)
+                                  
+                console.log("Owned sets is " + ownedSets)
+                console.log("Current Project name should be " + projectsArray[currentProjectIndex].projectName)
                 console.log("Checked Out should be " + projectsArray[currentProjectIndex].checkedOut)
                 console.log("Project index is " + currentProjectIndex)
               }
               }>       
             Change Project
-          </button>
+          </button>    
         </h3>
       );
 
@@ -125,12 +121,17 @@ function HWSetPage(){
           projectsArray = data  
 
           //testing this
+          //setCurrentProjectIndex(currentProjectIndex => currentProjectIndex = 0)
+          
+          setCurrentProjectName(projectsArray[currentProjectIndex].projectName)
           setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
           
           {/*forces rerender, probably better way to do this */}
           setRerender(render => render - 1)                             
           setRerender(render => render + 1)    
           console.log("projects is " + projectsArray)
+          
+          {/*Catches error if user has no projects  */}
         }).catch(error => {console.log(error)})           
     }
 
@@ -275,7 +276,7 @@ function HWSetPage(){
                 setOwnedSets(ownedSets => ownedSets = temp)
 
                 //update server
-                //updateOwnedSetsServer(i)
+                updateOwnedSetsServer(i)
       
                 console.log("checked out amount for set " + ownedSets[i] + " is " + data.hardwareTemplate.checkedOutAmount)
                 
@@ -305,6 +306,8 @@ function HWSetPage(){
     if(projectsArray.length > 0){
 	    return (
         <div>
+          {" "} 
+          {" "} 
           {displayProject()}
           {" "} 
 	        {HardwareArray.map((value,i) => (
@@ -349,6 +352,7 @@ function HWSetPage(){
 
 	return(
 			<div>
+        Current user is {userID}
         {displayCreateProject()}
 				{displayHardware()}
 			</div>

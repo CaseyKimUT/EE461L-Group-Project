@@ -199,8 +199,6 @@ def getUserProjects(userID:str,projectTemplate):
 def createProject(userID:str,projectName:str):
     """
     Creates project to database
-        - Check if empty string sent
-        - Check if duplicate project name 
     """
     print("User is",userID)
     print("New Project Name is:" ,projectName)
@@ -220,6 +218,44 @@ def createProject(userID:str,projectName:str):
 
     #print(projectDB)
     return(jsonify("hello"))
+
+@app.route("/getAllProjects/<userID>", methods=["GET"])
+def getNonJoinedProjects(userID:str):
+    """
+    Method returns all projects that user is not a part of
+    """
+    #print("user is " + userID)
+
+    tempDB = []
+    
+    projects = mongoProjectsDatabase.userProjects.find()
+
+    for project in projects:
+        if(userID not in project.get("users")):
+            newProject = {
+                "projectName":project.get("projectName"),
+                "checkedOut":project.get("checkedOut")
+            }
+        tempDB.append(newProject)
+    
+    print(tempDB)
+
+    return jsonify(tempDB)
+
+@app.route("/getAllProjects/<userID>/<projectName>", methods=["GET"])
+def joinProject(userID:str,projectName:str):
+    """
+    Join project from database using userID and projectName
+    """
+    #print("user is " + userID)
+    newArray = mongoProjectsDatabase.userProjects.find({"projectName":"testProject211"})
+    newArray = newArray.next()
+    newArray.get("users").append(userID)
+    print(newArray)
+    result = mongoProjectsDatabase.userProjects.update_one({"projectName":"projectName"},{"$set": {"users":newArray.get("users")}})
+
+    return jsonify(result)
+
 
 # Login and SignIn information
 # TO BE DELETED LATER: Database
