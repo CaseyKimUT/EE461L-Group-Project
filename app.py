@@ -11,14 +11,14 @@ import encrypt
 client = MongoClient("mongodb+srv://stephanieA:jzI0dQyVTBviEzgF@ee461ldb.lqgx1.mongodb.net/accounts?retryWrites=true&w=majority")
 
 # comment out on deployment
-from flask_cors import CORS
+# from flask_cors import CORS
 
 database = client["accounts"]
 
 app = Flask(__name__, static_folder="./build", static_url_path="")
 
 # comment out on deployment
-CORS(app)
+# CORS(app)
 
 
 #Hardware/Project Variables

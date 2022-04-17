@@ -22,7 +22,7 @@ function SignUpPage() {
                 setSUPError("Passwords must match")
                 
             } else {
-                fetch("http://127.0.0.1:5000/create_account/" + newUser + "/" + newPass)
+                fetch("/create_account/" + newUser + "/" + newPass)
                     .then(response =>
                         response.json()
                     )

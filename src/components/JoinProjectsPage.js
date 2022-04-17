@@ -26,7 +26,7 @@ function JoinProjects(){
       },[]);
 
     function initializeProjectsArray(){
-        fetch("http://127.0.0.1:5000/getNonJoinedProjects/" + userID)
+        fetch("/getNonJoinedProjects/" + userID)
         .then(response => 
           response.json()
         )
@@ -48,7 +48,7 @@ function JoinProjects(){
 
 
     function joinProjectButton(i){
-        fetch("http://127.0.0.1:5000/getAllProjects/" + userID + "/" + allProjectsArray[i].projectName)
+        fetch("/getAllProjects/" + userID + "/" + allProjectsArray[i].projectName)
                 .then(response => 
                   response.json()
                 ) 
