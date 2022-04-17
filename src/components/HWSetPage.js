@@ -1,6 +1,5 @@
 import {React,useState,useEffect} from 'react';
   
-
 let HardwareArray = [
   {id: 0,capacity:"",availability:""},
   {id: 1,capacity:"",availability:""}
@@ -74,10 +73,8 @@ function HWSetPage(){
       setOwnedSets(ownedSets => ownedSets = projectsArray[currentProjectIndex].checkedOut)
     }
 
-    function updateOwnedSetsServer(){
-
-      let tempOwnedSets = {ownedSets}
-
+    function updateOwnedSetsServer(i){
+      console.log(i)
       fetch("http://127.0.0.1:5000/updateServerProject/" + projectsArray[currentProjectIndex].projectName + "/" + ownedSets)
         .then(response => 
           response.json()
@@ -205,7 +202,7 @@ function HWSetPage(){
                     setOwnedSets(ownedSets => ownedSets = temp)
 
                     //update server
-                    updateOwnedSetsServer()
+                    updateOwnedSetsServer(i)
           
                     console.log("checked out" + data.hardwareTemplate.checkedOutAmount)
                     {/*forces rerender, probably better way to do this */}
@@ -273,12 +270,13 @@ function HWSetPage(){
 
                 HardwareArray[updatedHardware.id] = updatedHardware
 
-                {/*Current implementation adds to local owned sets                   
-                  TODO change so updates with server sets instead
-                */}
+                //update locally
                 let temp = ownedSets
                 temp[i] = temp[i] - data.hardwareTemplate.checkedOutAmount
                 setOwnedSets(ownedSets => ownedSets = temp)
+
+                //update server
+                //updateOwnedSetsServer(i)
       
                 console.log("checked out amount for set " + ownedSets[i] + " is " + data.hardwareTemplate.checkedOutAmount)
                 

@@ -2,7 +2,6 @@ from getpass import getuser
 from unittest import result
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
-from pandas import array
 
 import hardwareSet
 import wfdb
@@ -17,8 +16,6 @@ Client = MongoClient("mongodb+srv://Cosmic:0000@ee461ldb.lqgx1.mongodb.net/EE461
 
 mongoHardwareDatabase = Client.hardwareSets
 mongoProjectsDatabase = Client.projects
-
-
 
 # comment out on deployment
 from flask_cors import CORS
@@ -64,23 +61,22 @@ def updateServerHardware():
  
 
 @app.route("/updateServerProject/<projectName>/<ownedSets>", methods=["GET"])
-def updateServerProject(projectName:str,ownedSets:array):
+def updateServerProject(projectName:str,ownedSets:str):
     result = "Admin text, change to whatever"
     projects = mongoProjectsDatabase.userProjects.find()
+    
+    #projectName format already fine
 
-    #convert to name that can send to mongodb
-    convertedName = str(projectName)
+    #convert ownedSet to Int Array
+    newArray = ownedSets.split(',')
+    newArray = [int(i) for i in newArray]
+    print(newArray)
 
-    #convert ownedsets string to array
-    firstVar = ownedSets.split(',', 1)[0] 
-    secondVar = ownedSets.split(',',1)[1]
-    print(firstVar)
-    print(secondVar)
 
     for project in projects:
         print("Current project name is ",project.get("projectName"))
         if(projectName == project.get("projectName")):
-            mongoProjectsDatabase.userProjects.update_one({"projectName":convertedName},{"$set": {"checkedOut":[5,4]}}) 
+            mongoProjectsDatabase.userProjects.update_one({"projectName":projectName},{"$set": {"checkedOut":newArray}}) 
             break
         else:
             result = "Name not in Database!"
