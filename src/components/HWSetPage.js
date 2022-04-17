@@ -1,12 +1,7 @@
 import {React,useState,useEffect} from 'react';
-<<<<<<< HEAD
 import NavBar from './NavBar';
-
-  
-=======
 import LoginPage from './LoginPage';
 import {account_info} from './LoginPage'
->>>>>>> main
 
   
 let HardwareArray = [
@@ -362,12 +357,9 @@ function HWSetPage(){
 
 	return(
 			<div>
-<<<<<<< HEAD
         <NavBar/>
-=======
         Current user is {userID}
         {displayCreateProject()}
->>>>>>> main
 				{displayHardware()}
 			</div>
 		)
