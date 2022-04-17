@@ -18,8 +18,6 @@ let projectsArray = [
 
 function HWSetPage(){
 
-    const [userID,setUserID] = useState("this will change when user logs in")
-
     const [checkOut,setCheckout] = useState(new Array(HardwareArray.length).fill(0))
     const [checkIn,setCheckIn] = useState(new Array(HardwareArray.length).fill(0))
 
@@ -31,11 +29,11 @@ function HWSetPage(){
 
     const [rerender,setRerender] = useState(0)
 
-    useEffect(() => {
+    useEffect(() => {      
+      console.log(account_info.username)
       getProjects();      
       refreshHardwareArray();
-      setUserID(userID => userID = account_info.username)
-      console.log(account_info)
+      console.log(account_info.username)
     },[]);
 
 
@@ -49,7 +47,7 @@ function HWSetPage(){
           <button        
             variant="outlined"   
             onClick={() =>
-              fetch("http://127.0.0.1:5000/createProject/" + userID + "/" + projectName)
+              fetch("http://127.0.0.1:5000/createProject/" + account_info.username + "/" + projectName)
                 .then(response => 
                   response.json()
                 ) 
@@ -117,7 +115,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("http://127.0.0.1:5000/getUserProjects/" + account_info.username + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
@@ -356,7 +354,7 @@ function HWSetPage(){
 
 	return(
 			<div>
-        Current user is {userID}
+        Current user is {account_info.username}
         {displayCreateProject()}
 				{displayHardware()}
 			</div>
