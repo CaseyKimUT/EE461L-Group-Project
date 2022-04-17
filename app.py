@@ -1,6 +1,7 @@
+from email import message
+from urllib import response
 from flask import Flask, jsonify,request
 from flask.helpers import send_from_directory
-from gridfs import Database
 from pymongo import MongoClient
 
 import hardwareSet
@@ -144,14 +145,14 @@ def check_correct(username:str, password:str):
     if username in collections:
         password = encrypt.encrypt(password)
         account_info = database[username].find_one()
-        if account_info["account"]["password"] == password:
-            output = username
+        if account_info["password"] == password:
+            output = account_info["projects"]
         else:
             output = "Incorrect username or password"
     else:
         output = "Incorrect username or password"
     print(output)
-    return jsonify(error = output)
+    return jsonify(message = output)
 
 # Creates a new account with the given username and password
 @app.route("/create_account/<username>/<password>", methods = ["GET"])
@@ -163,10 +164,8 @@ def create_account(username: str, password: str):
         user = database[username]
         password = encrypt.encrypt(password)
         account_info = {
-            "account": {
-                "password": password,
-                "projects": []
-            }
+            "password": password,
+            "projects": []
         }
         user.insert_one(account_info)
         output = "Created account!"

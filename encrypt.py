@@ -20,13 +20,3 @@ def unencrypt(input: str):
     for i in range(len(reverse)):
         output += chr((ord(reverse[i]) - 34 + 13) % 93 + 34)
     return output
-
-""" Uncomment for testing
-keepGoing = True
-while keepGoing:
-    textToCheck = input("Enter input text: ")
-    encrypted = encrypt(textToCheck)
-    print(encrypted)
-    print(unencrypt(encrypted))
-    keepGoing = True if input("Keep going? (y/n) ") == 'y' else False
-"""

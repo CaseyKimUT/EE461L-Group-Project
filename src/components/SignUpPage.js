@@ -22,7 +22,7 @@ function SignUpPage() {
                 setSUPError("Passwords must match")
                 
             } else {
-                fetch("/create_account/" + username + "/" + password)
+                fetch("http://127.0.0.1:5000/create_account/" + newUser + "/" + newPass)
                     .then(response =>
                         response.json()
                     )
@@ -32,7 +32,6 @@ function SignUpPage() {
                     .catch(error => {
                         console.log(error)
                     })
-                alert(newUser + " " + newPass + " " + confirmPass)
             }}}>
             <label>Username: 
                 <input type="text" value = {newUser} onChange ={(e) => setNewUser(e.target.value)}></input>
@@ -46,7 +45,8 @@ function SignUpPage() {
             <label></label>
             <input type="submit" value="Create"></input>
         </form>
-        <label>{sUpError}</label>
+        <p>{sUpError}</p>
+        <p> Already have an account? <Link to='/'>LOGIN</Link></p>
     </div>
     );
 }
