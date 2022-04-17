@@ -1,9 +1,14 @@
 import React, {useState} from 'react';
 import { Link, Navigate } from 'react-router-dom';
 
+
+if (!sessionStorage.getItem("username")) {
+    sessionStorage.setItem("username", "")
+    sessionStorage.setItem("projects", [])
+}
 export let account_info = {
-    "username": "",
-    "projects": []
+    "username": sessionStorage.getItem("username"),
+    "projects": sessionStorage.getItem("projects")
 }
 
 /*
@@ -33,8 +38,12 @@ function LoginPage() {
                 setMessage(data.message)
             } else {
                 setLoggedIn(username)
-                account_info["username"] = username
-                account_info["projects"] = data.message
+                sessionStorage.setItem("username", username)
+                sessionStorage.setItem("projects", data.message)
+                account_info = {
+                    "username": username,
+                    "projects": data.message
+                }
                 console.log(account_info)
             }
         }catch(error){
