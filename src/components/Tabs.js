@@ -25,6 +25,9 @@ function Tabs() {
                         HARDWARESETS
                     </Link>
                     </li>
+                    <Link to='/joinProjects'>
+                        JOIN EXISTING PROJECTS
+                    </Link>
                     <li>
                     <Link to='/signup'>
                         SIGNUP

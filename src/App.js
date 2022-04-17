@@ -5,6 +5,7 @@ import HWSetPage from './components/HWSetPage';
 import DatasetsPage from './components/DatasetsPage';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import SignUpPage from './components/SignUpPage';
+import JoinProjects from './components/JoinProjectsPage';
 
 function App() {
   return (
@@ -19,6 +20,8 @@ function App() {
 
           <Route exact path='/datasets' element={<DatasetsPage/>}/>
           <Route exact path='/signup' element={<SignUpPage/>}/>
+          
+          <Route exact path='/joinProjects' element={<JoinProjects/>}/>
           
         </Routes>
       </Router>

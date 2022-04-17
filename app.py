@@ -217,7 +217,7 @@ def createProject(userID:str,projectName:str):
     #print(projectDB)
     return(jsonify("hello"))
 
-@app.route("/getAllProjects/<userID>", methods=["GET"])
+@app.route("/getNonJoinedProjects/<userID>", methods=["GET"])
 def getNonJoinedProjects(userID:str):
     """
     Method returns all projects that user is not a part of
@@ -234,7 +234,8 @@ def getNonJoinedProjects(userID:str):
                 "projectName":project.get("projectName"),
                 "checkedOut":project.get("checkedOut")
             }
-        tempDB.append(newProject)
+            tempDB.append(newProject)
+
     
     print(tempDB)
 
@@ -245,12 +246,19 @@ def joinProject(userID:str,projectName:str):
     """
     Join project from database using userID and projectName
     """
-    #print("user is " + userID)
-    newArray = mongoProjectsDatabase.userProjects.find({"projectName":"testProject211"})
-    newArray = newArray.next()
-    newArray.get("users").append(userID)
-    print(newArray)
-    result = mongoProjectsDatabase.userProjects.update_one({"projectName":"projectName"},{"$set": {"users":newArray.get("users")}})
+    print("user is ",userID)
+    print("projectName is",projectName)
+
+    getArray = mongoProjectsDatabase.userProjects.find({"projectName":projectName})
+    getArray = getArray.next()
+    getArray.get("users").append(userID)
+
+    newArray = getArray.get("users")
+
+    print("getArray is ",getArray)
+    print("array by itself is ",newArray)
+
+    result = mongoProjectsDatabase.userProjects.update_one({"projectName":projectName},{"$set": {"users":newArray}})
 
     return jsonify(result)
 
