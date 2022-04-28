@@ -86,15 +86,6 @@ def updateServerProject(projectName:str,ownedSets:str):
     
 
 
-#TODO implement with mongoDB
-"""projectDB = [
-    {
-        "projectName":"StarterProject",
-        "checkedOut":[0,0]
-    }"""
-    
-projectDB = []
-
 @app.route("/initializeHardwarePage/<hardwareTemplate>", methods=["GET"])
 def initializeHardwarePage(hardwareTemplate):
     """initializes a document for all hardware sets in database

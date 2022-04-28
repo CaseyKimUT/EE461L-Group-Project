@@ -11,7 +11,7 @@ class DatasetItem extends React.Component {
     }
 
     componentWillMount() {
-        fetch("/dataset/" + this.props.dskey) // use "http://127.0.0.1:5000/dataset/" + inputCode for local'
+        fetch("http://127.0.0.1:5000/dataset/" + this.props.dskey) // use "http://127.0.0.1:5000/dataset/" + inputCode for local'
         .then(response => 
           response.json()
         )

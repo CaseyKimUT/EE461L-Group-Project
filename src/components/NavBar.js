@@ -32,6 +32,13 @@ export default function ButtonAppBar() {
                 //   navigate("/hwset");
                 // }}
               > Projects </Button>
+              <Button 
+                color="inherit"
+                href="/joinProjects"
+                // onClick={() => {
+                //   navigate("/hwset");
+                // }}
+              > Join Project </Button>
 
               <Button 
                 color="inherit"

@@ -1,8 +1,7 @@
 import {React,useState,useEffect} from 'react';
-import NavBar from './NavBar';
 import LoginPage from './LoginPage';
 import {account_info} from './LoginPage'
-
+import NavBar from './NavBar';
   
 let HardwareArray = [
   {id: 0,capacity:"",availability:""},
@@ -33,7 +32,8 @@ function HWSetPage(){
 
     const [rerender,setRerender] = useState(0)
 
-    useEffect(() => {
+    useEffect(() => {      
+      console.log(account_info.username)
       getProjects();      
       refreshHardwareArray();
       console.log(localStorage.getItem('userID'))
@@ -50,7 +50,7 @@ function HWSetPage(){
           <button        
             variant="outlined"   
             onClick={() =>
-              fetch("http://127.0.0.1:5000/createProject/" + userID + "/" + projectName)
+              fetch("http://127.0.0.1:5000/createProject/" + account_info.username + "/" + projectName)
                 .then(response => 
                   response.json()
                 ) 
@@ -119,7 +119,7 @@ function HWSetPage(){
 
     function getProjects(){
       let projectTemplate = {}
-      fetch("http://127.0.0.1:5000/getUserProjects/" + userID + "/" + projectTemplate)
+      fetch("http://127.0.0.1:5000/getUserProjects/" + account_info.username + "/" + projectTemplate)
         .then(response => 
           response.json()
         )
@@ -359,7 +359,8 @@ function HWSetPage(){
 	return(
 			<div>
         <NavBar/>
-        Current user is {userID}
+
+        Current user is {account_info.username}
         {displayCreateProject()}
 				{displayHardware()}
 			</div>

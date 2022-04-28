@@ -15,11 +15,15 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
-import CheckIcon from '@mui/icons-material/Check';
+// import CheckIcon from '@mui/icons-material/Check';
 
+if (!sessionStorage.getItem("username")) {
+    sessionStorage.setItem("username", "")
+    sessionStorage.setItem("projects", [])
+}
 export let account_info = {
-  "username": "",
-  "projects": []
+    "username": sessionStorage.getItem("username"),
+    "projects": sessionStorage.getItem("projects")
 }
 
 function Copyright(props) {
@@ -84,10 +88,60 @@ export default function LoginPage() {
                     // setError(e.message)
                 })   
     };
+
+// function LoginPage() {
+
+//     const [username, setUsername] = useState("")
+//     const [password, setPassword] = useState("")
+//     const [message, setMessage]= useState("")
+//     const [loggedIn, setLoggedIn] = useState(false)
+
+//     if (loggedIn) {
+//         return <Navigate to='/hwset' />
+//     }
+
+//     async function submitHandler(e) {
+//         e.preventDefault()
+
+//         try {
+//             const response = await fetch("http://127.0.0.1:5000/check_correct/" + username + "/" + password);
+//             const data = await response.json()
+//             if (data.message === "Incorrect username or password") {
+//                 setMessage(data.message)
+//             } 
+//             else {
+//                 setLoggedIn(username)
+//                 sessionStorage.setItem("username", username)
+//                 sessionStorage.setItem("projects", data.message)
+//                 account_info = {
+//                     "username": username,
+//                     "projects": data.message
+//             }
+                
+//             .then(data => {
+                
+//                 console.log(data)
+//                 console.log(data.message)
+//                 if (data.correct) {
+//                     account_info["username"] = formData.get('username')
+//                     account_info["projects"] = data.message
+//                     localStorage.setItem('userID', formData.get('username'))
+//                     console.log(account_info)
+//                     console.log("navigating to hwset...")
+//                     navigate("/hwset")
+//                 } else {
+//                     setError(data.message)
+//                 }
+//             })
+//             .catch(e => {
+//                 console.log(e)
+//                 // setError(e.message)
+//             })   
+//     };
         
 
 
-  return (
+return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />

@@ -15,22 +15,10 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { Route, useNavigate } from 'react-router-dom';
 import { Alert } from '@mui/material';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Created by: '}
-      <Link color="inherit" href="https://github.com/CaseyKimUT/EE461L-Group-Project">
-        EE461L Group 
-      </Link>{' '}
-      {'.'}
-    </Typography>
-  );
-}
-// /*
-//  * TODO: Make the SignUp page and its necessary parts
-//  * this is only a placeholder and can be changed/replaced as necessary
-//  */
+/*
+ * TODO: Make the SignUp page and its necessary parts
+ * this is only a placeholder and can be changed/replaced as necessary
+ */
 // function SignUpPage() {
 
 //     const [newUser, setNewUser] = useState("")
@@ -75,8 +63,21 @@ function Copyright(props) {
 //         <p> Already have an account? <Link to='/'>LOGIN</Link></p>
 //     </div>
 //     );
+// }
 
 const theme = createTheme();
+
+function Copyright(props) {
+  return (
+    <Typography variant="body2" color="text.secondary" align="center" {...props}>
+      {'Created by: '}
+      <Link color="inherit" href="https://github.com/CaseyKimUT/EE461L-Group-Project">
+        EE461L Group 
+      </Link>{' '}
+      {'.'}
+    </Typography>
+  );
+}
 
 export default function SignUpPage() {
   const [error, setError]= useState("")

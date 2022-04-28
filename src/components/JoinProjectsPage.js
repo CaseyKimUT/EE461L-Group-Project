@@ -1,5 +1,5 @@
 import {React,useState,useEffect} from 'react';
-
+import NavBar from './NavBar';
 import {account_info} from './LoginPage'
 
 
@@ -12,14 +12,13 @@ let allProjectsArray = [
 
 function JoinProjects(){
 
-    const [userID,setUserID] = useState("this will change when user logs in")
+    let userID = localStorage.getItem('userID')
 
     
     const [joinProjectsArray,setJoinProjects] = useState([])
     const [rerender,setRerender] = useState(0)
 
     useEffect(() => {
-        setUserID(userID => userID = account_info.username)
         //setUserID(userID => userID = "testUser3")
         initializeProjectsArray();
         console.log(account_info)
@@ -79,6 +78,7 @@ function JoinProjects(){
 
     return(
         <div>
+            <NavBar/>
             {displayProjects()}
         </div>
 
