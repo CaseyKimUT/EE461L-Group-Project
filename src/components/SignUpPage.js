@@ -87,37 +87,47 @@ export default function SignUpPage() {
     const handleSubmit = (event) => {
         event.preventDefault()
         const formData = new FormData(event.currentTarget)
-        
+        let username = formData.get('username')
+        let password = formData.get('password')
+        let confirm = formData.get('confirm-pass')
+
         console.log({
-                  username: formData.get('username'),
-                  password: formData.get('password'),
-                });
+            username: username,
+            password: password,
+            confirm: confirm
+        });
         
-                fetch("http://127.0.0.1:5000/create_account/" + formData.get('username') + "/" + formData.get('password'))
-                .then(response => {
-                  console.log(response)
-                  if (response.ok) {
-                        return response.json()
-                    } else {
-                        throw new Error('Something went wrong ...')
-                    }
-                }
-                )
-                .then(data => {
-                  
-                  console.log(data)
-                  console.log(data.message)
-                  if (data.correct) {
-                      console.log("navigating to hwset...")
-                      navigate("/hwset")
-                  } else {
-                      setError(data.message)
-                  }
-                })
-                .catch(e => {
-                    console.log(e)
-                    // setError(e.message)
-                })   
+        if(password != confirm){
+          setError('Passwords do not match')
+        }
+        else{
+          fetch("http://127.0.0.1:5000/create_account/" + formData.get('username') + "/" + formData.get('password'))
+        .then(response => {
+          console.log(response)
+          if (response.ok) {
+                return response.json()
+            } else {
+                throw new Error('Something went wrong ...')
+            }
+        }
+        )
+        .then(data => {
+          
+          console.log(data)
+          console.log(data.message)
+          if (data.correct) {
+              console.log("navigating to hwset...")
+              navigate("/hwset")
+          } else {
+              setError(data.message)
+          }
+        })
+        .catch(e => {
+            console.log(e)
+            // setError(e.message)
+        })  
+        }
+         
     };
 
   return (
@@ -157,6 +167,16 @@ export default function SignUpPage() {
               label="Password"
               type="password"
               id="password"
+              autoComplete="current-password"
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="confirm-pass"
+              label="Confirm Password"
+              type="password"
+              id="confirm-pass"
               autoComplete="current-password"
             />
             {/* <FormControlLabel

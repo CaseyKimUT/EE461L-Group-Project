@@ -8,7 +8,10 @@ import hardwareSet
 import wfdb
 import encrypt
 
-client = MongoClient("mongodb+srv://stephanieA:jzI0dQyVTBviEzgF@ee461ldb.lqgx1.mongodb.net/accounts?retryWrites=true&w=majority")
+uri = "mongodb+srv://spoudelsmash:Eacps1Dvn4YHw0E1@firstcluster.lx3pe.mongodb.net/myFirstDatabase?retryWrites=true&w=majority"
+
+client = MongoClient(uri)
+# client = MongoClient("mongodb+srv://stephanieA:jzI0dQyVTBviEzgF@ee461ldb.lqgx1.mongodb.net/accounts?retryWrites=true&w=majority")
 
 # comment out on deployment
 from flask_cors import CORS
@@ -30,6 +33,7 @@ dbHardware = {0:HwSet1,
 
 mongoHardwareDatabase = client.hardwareSets
 mongoProjectsDatabase = client.projects
+
 projectDB = []
 
 def updateLocalHardware():

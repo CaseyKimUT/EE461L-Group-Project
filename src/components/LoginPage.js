@@ -40,6 +40,7 @@ export default function LoginPage() {
     // const [username, setUsername] = useState("")
     // const [password, setPassword] = useState("")
     const [error, setError]= useState("")
+    console.log(localStorage.getItem('userID'))
 
 
     let navigate = useNavigate();
@@ -70,6 +71,7 @@ export default function LoginPage() {
                   if (data.correct) {
                       account_info["username"] = formData.get('username')
                       account_info["projects"] = data.message
+                      localStorage.setItem('userID', formData.get('username'))
                       console.log(account_info)
                       console.log("navigating to hwset...")
                       navigate("/hwset")

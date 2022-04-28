@@ -53,9 +53,10 @@ export default function ButtonAppBar() {
               <Button 
                 color="inherit"
                 href="/"
-                // onClick={() => {
-                //   navigate("/");
-                // }}
+                onClick={() => {
+                  localStorage.setItem('userID', '')
+                  
+                }}
                 >Logout</Button>
             </Toolbar>
           </AppBar>

@@ -19,7 +19,8 @@ let projectsArray = [
 
 function HWSetPage(){
 
-    const [userID,setUserID] = useState("this will change when user logs in")
+    let userID = localStorage.getItem('userID')
+
 
     const [checkOut,setCheckout] = useState(new Array(HardwareArray.length).fill(0))
     const [checkIn,setCheckIn] = useState(new Array(HardwareArray.length).fill(0))
@@ -35,8 +36,7 @@ function HWSetPage(){
     useEffect(() => {
       getProjects();      
       refreshHardwareArray();
-      setUserID(userID => userID = account_info.username)
-      console.log(account_info)
+      console.log(localStorage.getItem('userID'))
     },[]);
 
 
@@ -56,6 +56,7 @@ function HWSetPage(){
                 ) 
                 .then(data => { 
                   getProjects()
+                  console.log(data)
                   console.log("Success")
                 }).catch(error => {
                   getProjects()
